@@ -28,10 +28,10 @@ app.use(function (req, res, next) {
 
 let delay = 1000;
 const attemptConnection = function() {
-	MongoClient.connect('mongodb://mongo:27017/cardographer')
-		.then((newDB) => {
+	MongoClient.connect('mongodb://mongo:27017')
+		.then((client) => {
 			console.log("Connected to DB");
-			db = newDB;
+			db = client.db('cardographer');
 
 			const port = 80;
 			const server = http.createServer(app);
