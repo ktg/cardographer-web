@@ -1,0 +1,23 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+    mongo:
+        image: mongo
+        hostname: mongo
+        expose:
+            - "27017"
+        restart: always
+        volumes:
+            - './server/db:/data/db'
+            - './server/backup:/backup'
+
+    server:
+        build: server/src
+        restart: always
+        depends_on:
+            - 'mongo'
+        ports:
+            - '80:80'
+        volumes:
+            - './server:/app'
