@@ -17,7 +17,7 @@ app.post('/api/dump', (req, res) => {
 	let dumpDoc = req.body;
 	db.collection('dump').insertOne(dumpDoc)
 		.then(() => {
-			res.json('{"result": "success"}');
+			res.json({"result": "success"});
 		})
 		.catch((err) => {
 			console.log(err);
