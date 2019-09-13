@@ -16,6 +16,20 @@ app.use(express.urlencoded({extended: false}));
 app.post('/api/dump', (req, res) => {
 	let dumpDoc = req.body;
 	db.collection('dump').insertOne(dumpDoc)
+		.then(() => {
+			res.json('{"result": "success"}');
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
+});
+
+app.get('/api/dump/list', (req, res) => {
+	db.collection('dump').find().toArray()
+		.then((result) => {
+			res.json(result);
+		})
 		.catch((err) => {
 			console.log(err);
 			res.status(500).send(err);
