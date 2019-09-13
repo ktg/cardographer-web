@@ -13,7 +13,7 @@ services:
             - './server/backup:/backup'
 
     server:
-        build: server/src
+        build: server
         restart: always
         depends_on:
             - 'mongo'
