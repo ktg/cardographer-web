@@ -39,10 +39,8 @@ app.get('/api/dump/list', (req, res) => {
 
 app.get('/api/dump/:id', (req, res) => {
 	let id = req.params.id;
-	console.log(id);
-	db.collection('recipes').findOne({'_id': ObjectId(id)})
+	db.collection('dump').findOne({'_id': ObjectId(id)})
 		.then((result) => {
-			console.log(result);
 			res.json(result);
 		})
 		.catch((err) => {
