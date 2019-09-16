@@ -1,9 +1,9 @@
-const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
 const createError = require('http-errors');
-const logger = require('morgan');
 const debug = require('debug')('server:server');
+const express = require('express');
 const http = require('http');
+const logger = require('morgan');
+const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
 let db;
@@ -26,9 +26,8 @@ app.post('/api/dump', (req, res) => {
 		});
 });
 
-app.get('/api/dump/:id', (req, res) => {
-	let id = req.params.id;
-	db.collection('recipes').findOne({'_id': ObjectID(id)})
+app.get('/api/dump/list', (req, res) => {
+	db.collection('dump').find().toArray()
 		.then((result) => {
 			res.json(result);
 		})
@@ -38,8 +37,9 @@ app.get('/api/dump/:id', (req, res) => {
 		});
 });
 
-app.get('/api/dump/list', (req, res) => {
-	db.collection('dump').find().toArray()
+app.get('/api/dump/:id', (req, res) => {
+	let id = req.params.id;
+	db.collection('recipes').findOne({'_id': ObjectID(id)})
 		.then((result) => {
 			res.json(result);
 		})
