@@ -4,6 +4,7 @@ const createError = require('http-errors');
 const logger = require('morgan');
 const debug = require('debug')('server:server');
 const http = require('http');
+const ObjectID = require('mongodb').ObjectID;
 
 let db;
 
