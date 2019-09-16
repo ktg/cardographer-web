@@ -39,8 +39,10 @@ app.get('/api/dump/list', (req, res) => {
 
 app.get('/api/dump/:id', (req, res) => {
 	let id = req.params.id;
+	console.log(id);
 	db.collection('recipes').findOne({'_id': ObjectId(id)})
 		.then((result) => {
+			console.log(result);
 			res.json(result);
 		})
 		.catch((err) => {
@@ -54,7 +56,7 @@ app.use(function (req, res, next) {
 });
 
 let delay = 1000;
-const attemptConnection = function() {
+const attemptConnection = function () {
 	MongoClient.connect('mongodb://mongo:27017')
 		.then((client) => {
 			console.log("Connected to DB");
