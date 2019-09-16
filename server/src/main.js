@@ -4,6 +4,7 @@ const express = require('express');
 const http = require('http');
 const logger = require('morgan');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 
 let db;
 
@@ -38,7 +39,7 @@ app.get('/api/dump/list', (req, res) => {
 
 app.get('/api/dump/:id', (req, res) => {
 	let id = req.params.id;
-	db.collection('recipes').findOne({'_id': id})
+	db.collection('recipes').findOne({'_id': ObjectId(id)})
 		.then((result) => {
 			res.json(result);
 		})
