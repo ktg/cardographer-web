@@ -25,6 +25,18 @@ app.post('/api/dump', (req, res) => {
 		});
 });
 
+app.get('/api/dump/:id', (req, res) => {
+	let id = req.params.id;
+	db.collection('recipes').findOne({'_id': ObjectID(id)})
+		.then((result) => {
+			res.json(result);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
+});
+
 app.get('/api/dump/list', (req, res) => {
 	db.collection('dump').find().toArray()
 		.then((result) => {
