@@ -17,8 +17,8 @@ app.use(express.urlencoded({extended: false}));
 app.post('/api/dump', (req, res) => {
 	let dumpDoc = req.body;
 	db.collection('dump').insertOne(dumpDoc)
-		.then(() => {
-			res.json({"result": "success"});
+		.then((result) => {
+			res.json({"result": "success", "insertedId": result.insertedId});
 		})
 		.catch((err) => {
 			console.log(err);
