@@ -19,5 +19,3 @@ services:
             - 'mongo'
         ports:
             - '80:80'
-        volumes:
-            - './server:/app'
