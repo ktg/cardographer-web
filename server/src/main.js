@@ -60,7 +60,7 @@ const attemptConnection = function () {
 			console.log("Connected to DB");
 			db = client.db('cardographer');
 
-			const port = 8001;
+			const port = 80;
 			const server = http.createServer(app);
 			server.listen(port);
 			server.on('error', (error) => {
