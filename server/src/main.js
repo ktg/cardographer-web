@@ -28,7 +28,7 @@ app.post('/api/dump', (req, res) => {
 
 app.post('/api/xSpace', (req, res) => {
 	let dumpDoc = req.body;
-	db.collection('xSpace').insertOne(dumpDoc)
+	db.collection('xSpace').insertMany(dumpDoc)
 		.then((result) => {
 			res.json({"result": "success", "insertedId": result.insertedId});
 		})
