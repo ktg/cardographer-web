@@ -26,8 +26,31 @@ app.post('/api/dump', (req, res) => {
 		});
 });
 
+app.post('/api/xSpace', (req, res) => {
+	let dumpDoc = req.body;
+	db.collection('xSpace').insertOne(dumpDoc)
+		.then((result) => {
+			res.json({"result": "success", "insertedId": result.insertedId});
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
+});
+
 app.get('/api/dump/list', (req, res) => {
 	db.collection('dump').find().toArray()
+		.then((result) => {
+			res.json(result);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
+});
+
+app.get('/api/xSpace/list', (req, res) => {
+	db.collection('xSpace').find().toArray()
 		.then((result) => {
 			res.json(result);
 		})
