@@ -2,15 +2,17 @@ const createError = require('http-errors');
 const debug = require('debug')('server:server');
 const express = require('express');
 const http = require('http');
-const logger = require('morgan');
+//const logger = require('morgan');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+const cors = require('cors');
 
 let db;
 
 const app = express();
 
-app.use(logger('dev'));
+//app.use(logger('dev'));
+app.use(cors);
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
