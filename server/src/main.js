@@ -12,7 +12,7 @@ let db;
 const app = express();
 
 app.use(logger('dev'));
-app.use(cors);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -108,6 +108,7 @@ const attemptConnection = function () {
 						process.exit(1);
 						break;
 					default:
+						console.error(error);
 						throw error;
 				}
 			});
