@@ -1,5 +1,7 @@
-# Use root/example as user/password credentials
 version: '3.1'
+
+volumes:
+    uploads: { }
 
 services:
     mongo:
@@ -19,3 +21,5 @@ services:
             - 'mongo'
         ports:
             - '80:80'
+        volumes:
+            - uploads:/app/uploads

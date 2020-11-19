@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="/chocolate/css/chocolate.css">
+    <script src="/chocolate/js/addContent.js" defer></script>
+</head>
+<body>
+<img src="/chocolate/images/choclogo.webp" style="width:148px">
+<div class="items">
+    <% content.forEach((contentItem, index) => { %>
+        <div class="item">
+            <% if(contentItem.mimetype) { %>
+                <% if(contentItem.mimetype.startsWith("image/")) { %>
+                    <img src="<%= contentItem.uri %>"/>
+                <% } else if(contentItem.mimetype === 'video/youtube') { %>
+                    <iframe src="https://www.youtube.com/embed/<%= contentItem.uri %>">
+                    </iframe>
+                <% } else if(contentItem.mimetype.startsWith("video/")) { %>
+                    <video src="<%= contentItem.uri %>" controls></video>
+                <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
+                    <audio src="<%= contentItem.uri %>" controls></audio>
+                <% } else if(contentItem.mimetype === 'text/plain') { %>
+                    <form>
+                        <textarea></textarea>
+                    </form>
+                <% } else if(contentItem.mimetype === 'text/x-uri') { %>
+
+                    <div>
+                        <a href="<%= contentItem.uri %>" class="link">
+                            <% if(contentItem.image) { %>
+                                <div><img src="<%= contentItem.image %>"></div>
+                            <% } %>
+                            <% if(contentItem.provider) { %>
+                                <div class="linkProvider"><%= contentItem.provider %></div>
+                            <% } %>
+                            <div class="linkTitle"><%= contentItem.title || contentItem.uri %></div>
+                            <% if(contentItem.description) { %>
+                                <div class="linkDescription"><%= contentItem.description %></div>
+                            <% } %>
+                        </a>
+                    </div>
+                <% } %>
+            <% } %>
+            <form action="deleteItem" method="post">
+                <input type="hidden" name="item" value="<%= index %>">
+                <input type="submit" value="Delete Item">
+            </form>
+        </div>
+    <% }); %>
+    <% if(content.length < 4) { %>
+        <div class="item">
+            <div id="contentButtons">
+                <form action="addMessage" method="post">
+                    <input type="submit" value="Add Message"/>
+                </form>
+                <button id="addVideo">Add Video</button>
+                <button id="addAudio">Add Audio</button>
+                <button id="addImage">Add Picture</button>
+                <button id="addLink">Add Link</button>
+            </div>
+            <div id="uploader">
+                <form action="addFile" method="post" enctype="multipart/form-data">
+                    <input id="uploadInput" type="file" name="file">
+                    <input type="submit" value="Upload">
+                </form>
+            </div>
+            <div id="linker">
+                <form action="addLink" method="post">
+                    <input type="url" name="link">
+                    <input type="submit" value="Add Link">
+                </form>
+            </div>
+        </div>
+    <% } %>
+</div>
+</body>
+</html>

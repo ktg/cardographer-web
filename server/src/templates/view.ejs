@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="/chocolate/css/chocolate.css">
+</head>
+<body>
+<img src="/chocolate/images/choclogo.webp" style="width:148px">
+<div class="items">
+    <% content.forEach((contentItem) => { %>
+        <div class="item">
+            <% if(contentItem.mimetype.startsWith("image/")) { %>
+                <img src="<%= contentItem.uri %>"/>
+            <% } else if(contentItem.mimetype === 'video/youtube') { %>
+                <iframe src="https://www.youtube.com/embed/<%= contentItem.uri %>">
+                </iframe>
+            <% } else if(contentItem.mimetype.startsWith("video/")) { %>
+                <video src="<%= contentItem.uri %>" controls></video>
+            <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
+                <audio src="<%= contentItem.uri %>" controls></audio>
+            <% } else if(contentItem.mimetype === 'text/plain') { %>
+            <% } else if(contentItem.mimetype === 'text/x-uri') { %>
+                <div>
+                    <a href="<%= contentItem.uri %>" class="link">
+                        <% if(contentItem.image) { %>
+                            <div><img src="<%= contentItem.image %>"></div>
+                        <% } %>
+                        <% if(contentItem.provider) { %>
+                            <div class="linkProvider"><%= contentItem.provider %></div>
+                        <% } %>
+                        <div class="linkTitle"><%= contentItem.title || contentItem.uri %></div>
+                        <% if(contentItem.description) { %>
+                            <div class="linkDescription"><%= contentItem.description %></div>
+                        <% } %>
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    <% }); %>
+</div>
+</body>
+</html>

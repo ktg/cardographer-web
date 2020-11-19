@@ -6,12 +6,17 @@
 		"start": "node src/main"
 	},
 	"dependencies": {
-		"debug": "^4.1.1",
+		"debug": "^4.2.0",
 		"express": "^4.17.1",
 		"multer": "^1.4.2",
 		"http-errors": "^1.8.0",
-		"mongodb": "^3.6.1",
+		"mongodb": "^3.6.3",
 		"morgan": "^1.10.0",
-		"cors": "^2.8.5"
+		"cors": "^2.8.5",
+		"ejs": "^3.1.5",
+		"nanoid": "^3.1.16",
+		"page-metadata-parser": "^1.1.4",
+		"domino": "^2.1.6",
+		"node-fetch": "^2.6.1"
 	}
 }

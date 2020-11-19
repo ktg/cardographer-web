@@ -4,75 +4,23 @@ const express = require('express');
 const http = require('http');
 const logger = require('morgan');
 const MongoClient = require('mongodb').MongoClient;
-const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors');
 
-let db;
-
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/templates');
 
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: true}));
 
-app.post('/api/dump', (req, res) => {
-	let dumpDoc = req.body;
-	db.collection('dump').insertOne(dumpDoc)
-		.then((result) => {
-			res.json({"result": "success", "insertedId": result.insertedId});
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
-});
+app.use('/api/dump', require('./routes/cardographer'));
+app.use('/api/xSpace', require('./routes/xSpace'));
+app.use('/chocolate', require('./routes/chocolate'))
 
-app.post('/api/xSpace', (req, res) => {
-	let dumpDoc = req.body;
-	db.collection('xSpace').insertMany(dumpDoc)
-		.then((result) => {
-			res.json({"result": "success", "insertedId": result.insertedId});
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
-});
-
-app.get('/api/dump/list', (req, res) => {
-	db.collection('dump').find().toArray()
-		.then((result) => {
-			res.json(result);
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
-});
-
-app.get('/api/xSpace/list', (req, res) => {
-	db.collection('xSpace').find().toArray()
-		.then((result) => {
-			res.json(result);
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
-});
-
-app.get('/api/dump/:id', (req, res) => {
-	let id = req.params.id;
-	db.collection('dump').findOne({'_id': ObjectId(id)})
-		.then((result) => {
-			res.json(result);
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
-});
+//app.use(express.static('static'));
 
 app.use(function (req, res, next) {
 	next(createError(404));
@@ -80,10 +28,14 @@ app.use(function (req, res, next) {
 
 let delay = 1000;
 const attemptConnection = function () {
-	MongoClient.connect('mongodb://mongo:27017')
+	MongoClient.connect('mongodb://mongo:27017', {useUnifiedTopology: true})
 		.then((client) => {
 			console.log("Connected to DB");
-			db = client.db('cardographer');
+			const db = client.db('cardographer');
+
+			app.locals.cardographer = db.collection('dump');
+			app.locals.xSpace = db.collection('xSpace');
+			app.locals.chocolate = db.collection('chocolate');
 
 			const port = 80;
 			const server = http.createServer(app);
@@ -121,7 +73,7 @@ const attemptConnection = function () {
 			});
 		})
 		.catch((err) => {
-			console.log(err);
+			console.log(err.message);
 			setTimeout(attemptConnection, delay);
 		});
 };
