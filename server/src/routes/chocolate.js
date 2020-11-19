@@ -107,6 +107,20 @@ router.post('/:orderid/addMessage', async (req, res) => {
 	}
 });
 
+router.post('/:orderid/updateMessage', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocolate.findOne({"order": orderid});
+	if (order) {
+		const itemIndex = req.body.item;
+		order.content[itemIndex].uri = req.body.content;
+		console.log(order);
+		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+		res.redirect('create');
+	} else {
+		res.status(404).send();
+	}
+});
+
 router.post('/:orderid/addFile', upload.single('file'), async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocolate.findOne({"order": orderid})

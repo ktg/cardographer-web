@@ -21,8 +21,10 @@
                 <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
                     <audio src="<%= contentItem.uri %>" controls></audio>
                 <% } else if(contentItem.mimetype === 'text/plain') { %>
-                    <form>
-                        <textarea></textarea>
+                    <form action="updateMessage" method="post">
+                        <textarea name="content" rows="10"><%= contentItem.uri %></textarea>
+                        <input type="hidden" name="item" value="<%= index %>">
+                        <input type="submit" value="Save Message">
                     </form>
                 <% } else if(contentItem.mimetype === 'text/x-uri') { %>
 
