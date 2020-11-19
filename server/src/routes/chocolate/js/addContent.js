@@ -21,3 +21,8 @@ document.getElementById('addAudio').addEventListener('click', () => {
 	upload.accept = 'audio/*';
 	upload.click();
 });
+
+document.getElementById('addLink').addEventListener('click', () => {
+	document.getElementById('contentButtons').style.display = 'none';
+	document.getElementById('linker').style.display = 'block';
+});
