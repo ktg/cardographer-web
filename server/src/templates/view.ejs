@@ -19,6 +19,7 @@
             <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
                 <audio src="<%= contentItem.uri %>" controls></audio>
             <% } else if(contentItem.mimetype === 'text/plain') { %>
+                <div><%= contentItem.uri %></div>
             <% } else if(contentItem.mimetype === 'text/x-uri') { %>
                 <div>
                     <a href="<%= contentItem.uri %>" class="link">
