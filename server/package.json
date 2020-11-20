@@ -6,17 +6,18 @@
 		"start": "node src/main"
 	},
 	"dependencies": {
+		"abort-controller": "^3.0.0",
+		"cors": "^2.8.5",
 		"debug": "^4.2.0",
+		"domino": "^2.1.6",
+		"ejs": "^3.1.5",
 		"express": "^4.17.1",
-		"multer": "^1.4.2",
 		"http-errors": "^1.8.0",
 		"mongodb": "^3.6.3",
 		"morgan": "^1.10.0",
-		"cors": "^2.8.5",
-		"ejs": "^3.1.5",
+		"multer": "^1.4.2",
 		"nanoid": "^3.1.16",
-		"page-metadata-parser": "^1.1.4",
-		"domino": "^2.1.6",
-		"node-fetch": "^2.6.1"
+		"node-fetch": "^2.6.1",
+		"page-metadata-parser": "^1.1.4"
 	}
 }

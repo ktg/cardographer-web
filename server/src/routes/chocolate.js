@@ -7,6 +7,7 @@ const fs = require('fs');
 const {getMetadata} = require('page-metadata-parser');
 const domino = require('domino');
 const fetch = require('node-fetch');
+const AbortController = require('abort-controller');
 
 const uploadDir = process.cwd() + '/uploads/chocolate/';
 const uploadUri = '/chocolate/uploads/'
@@ -138,6 +139,23 @@ router.post('/:orderid/addFile', upload.single('file'), async (req, res) => {
 	}
 });
 
+async function fetchTimeout(url, time) {
+	const controller = new AbortController();
+	const timeout = setTimeout(() => {
+		controller.abort();
+	}, time);
+
+	try {
+		return await fetch(url, {signal: controller.signal});
+	} catch (error) {
+		if (error.name === 'AbortError') {
+			console.log('request was aborted');
+		}
+	} finally {
+		clearTimeout(timeout);
+	}
+}
+
 const youtubeMatcher = new RegExp('^(?:.+?)?(?:\\/v\\/|watch\\/|\\?v=|&v=|youtu\\.be\\/|\\/v=|^youtu\\.be\\/|watch%3Fv%3D)([a-zA-Z0-9_-]{11})+$', 'i');
 router.post('/:orderid/addLink', async (req, res) => {
 	const orderid = req.params['orderid'];
@@ -152,31 +170,39 @@ router.post('/:orderid/addLink', async (req, res) => {
 		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
 		res.redirect('create');
 	} else {
-		const response = await fetch(uri);
-		const contentType = response.headers.get("content-type");
-		if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
+		try {
+			const response = await fetchTimeout(uri, 3000);
+			const contentType = response.headers.get("content-type");
+			if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
+				order.content.push({
+					"uri": uri,
+					"mimetype": contentType,
+				});
+			} else {
+				const html = await response.text();
+				const doc = domino.createWindow(html).document;
+				const metadata = getMetadata(doc, uri);
+				console.log(metadata);
+				order.content.push({
+					"uri": uri,
+					"mimetype": 'text/x-uri',
+					"title": metadata.title,
+					"description": metadata.description,
+					"icon": metadata.icon,
+					"image": metadata.image,
+					"provider": metadata.provider
+				});
+			}
+			await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+			res.redirect('create');
+		} catch (e) {
 			order.content.push({
 				"uri": uri,
-				"mimetype": contentType,
+				"mimetype": 'text/x-uri'
 			});
-		} else {
-			const html = await response.text();
-			const doc = domino.createWindow(html).document;
-			const metadata = getMetadata(doc, uri);
-			console.log(metadata);
-			order.content.push({
-				"uri": uri,
-				"mimetype": 'text/x-uri',
-				"title": metadata.title,
-				"description": metadata.description,
-				"icon": metadata.icon,
-				"image": metadata.image,
-				"provider": metadata.provider
-			});
+			await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+			res.redirect('create');
 		}
-		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
-		res.redirect('create');
-
 	}
 });
 
