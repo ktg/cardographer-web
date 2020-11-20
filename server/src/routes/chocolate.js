@@ -153,19 +153,27 @@ router.post('/:orderid/addLink', async (req, res) => {
 		res.redirect('create');
 	} else {
 		const response = await fetch(uri);
-		const html = await response.text();
-		const doc = domino.createWindow(html).document;
-		const metadata = getMetadata(doc, uri);
-		console.log(metadata);
-		order.content.push({
-			"uri": uri,
-			"mimetype": 'text/x-uri',
-			"title": metadata.title,
-			"description": metadata.description,
-			"icon": metadata.icon,
-			"image": metadata.image,
-			"provider": metadata.provider
-		});
+		const contentType = response.headers.get("content-type");
+		if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
+			order.content.push({
+				"uri": uri,
+				"mimetype": contentType,
+			});
+		} else {
+			const html = await response.text();
+			const doc = domino.createWindow(html).document;
+			const metadata = getMetadata(doc, uri);
+			console.log(metadata);
+			order.content.push({
+				"uri": uri,
+				"mimetype": 'text/x-uri',
+				"title": metadata.title,
+				"description": metadata.description,
+				"icon": metadata.icon,
+				"image": metadata.image,
+				"provider": metadata.provider
+			});
+		}
 		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
 		res.redirect('create');
 
