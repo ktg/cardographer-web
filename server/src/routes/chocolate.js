@@ -42,6 +42,17 @@ router.get('/create', (req, res) => {
 		});
 });
 
+router.get('/api/list', (req, res) => {
+	req.app.locals.chocolate.find().toArray()
+		.then((result) => {
+			res.json(result);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
+});
+
 router.get('/:orderid', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocolate.findOne({"order": orderid})
