@@ -26,3 +26,13 @@ document.getElementById('addLink').addEventListener('click', () => {
 	document.getElementById('contentButtons').style.display = 'none';
 	document.getElementById('linker').style.display = 'block';
 });
+
+document.getElementById('fileCancel').addEventListener('click', () => {
+	document.getElementById('contentButtons').style.display = '';
+	document.getElementById('uploader').style.display = 'none';
+});
+
+document.getElementById('linkCancel').addEventListener('click', () => {
+	document.getElementById('contentButtons').style.display = '';
+	document.getElementById('linker').style.display = 'none';
+});
