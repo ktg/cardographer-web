@@ -34,7 +34,7 @@ body {
 	max-width: 400px;
 }
 
-#contentButtons > button {
+#contentButtons > * {
 	margin: 4px;
 }
 
@@ -78,4 +78,6 @@ button, input[type=submit], input[type=file]::-webkit-file-upload-button {
 	border-color: rgb(255, 255, 255);
 	border-width: 0;
 	border-radius: 0;
+	padding: 4px 16px;
+	margin-top: 2px;
 }
