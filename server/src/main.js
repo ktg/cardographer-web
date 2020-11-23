@@ -35,7 +35,8 @@ const attemptConnection = function () {
 
 			app.locals.cardographer = db.collection('dump');
 			app.locals.xSpace = db.collection('xSpace');
-			app.locals.chocolate = db.collection('chocolate');
+
+			app.locals.chocDb = client.db('chocolate');
 
 			const port = 80;
 			const server = http.createServer(app);

@@ -26,13 +26,17 @@ const idgen = nanoid.customAlphabet('1234567890abcdefghijklmnopqrstuvwxyzABCDEFG
 router.use('/uploads', express.static(uploadDir));
 router.use('/', express.static(__dirname + '/chocolate/'));
 
+router.get('/', (req, res) => {
+	res.render( 'intro.ejs');
+});
+
 router.get('/create', (req, res) => {
 	const id = idgen();
 	const item = {
 		"order": id,
 		"content": []
 	}
-	req.app.locals.chocolate.insertOne(item)
+	req.app.locals.chocDb.collection('order').insertOne(item)
 		.then(() => {
 			res.redirect(id + '/create');
 		})
@@ -43,7 +47,7 @@ router.get('/create', (req, res) => {
 });
 
 router.get('/api/list', (req, res) => {
-	req.app.locals.chocolate.find().toArray()
+	req.app.locals.chocDb.collection('order').find().toArray()
 		.then((result) => {
 			res.json(result);
 		})
@@ -55,7 +59,7 @@ router.get('/api/list', (req, res) => {
 
 router.get('/:orderid', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocolate.findOne({"order": orderid})
+	const order = await req.app.locals.chocDb.collection('order').findOne({"order": orderid})
 	if (order) {
 		res.render('view.ejs', order)
 	} else {
@@ -65,7 +69,7 @@ router.get('/:orderid', async (req, res) => {
 
 router.get('/:orderid/create', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocolate.findOne({"order": orderid});
+	const order = await req.app.locals.chocDb.collection('order').findOne({"order": orderid});
 	console.log(order);
 	if (order) {
 		res.render('edit.ejs', order);
@@ -76,7 +80,7 @@ router.get('/:orderid/create', async (req, res) => {
 
 router.post('/:orderid/deleteItem', (req, res) => {
 	const orderid = req.params['orderid'];
-	req.app.locals.chocolate.findOne({"order": orderid})
+	req.app.locals.chocDb.collection('order').findOne({"order": orderid})
 		.then((order) => {
 			if (order) {
 				const removeIndex = req.body.item;
@@ -90,7 +94,7 @@ router.post('/:orderid/deleteItem', (req, res) => {
 				}
 				// noinspection EqualityComparisonWithCoercionJS
 				order.content = order.content.filter((value, index) => index != removeIndex);
-				req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+				req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order)
 					.then(() => {
 						res.redirect('create');
 					})
@@ -106,13 +110,13 @@ router.post('/:orderid/deleteItem', (req, res) => {
 
 router.post('/:orderid/addMessage', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocolate.findOne({"order": orderid})
+	const order = await req.app.locals.chocDb.collection('order').findOne({"order": orderid})
 	if (order) {
 		order.content.push({
 			uri: "",
 			mimetype: "text/plain"
 		});
-		await req.app.locals.chocolate.replaceOne({"order": orderid}, order);
+		await req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order);
 		res.redirect('create');
 	} else {
 		res.status(404).send("Not Found");
@@ -121,12 +125,12 @@ router.post('/:orderid/addMessage', async (req, res) => {
 
 router.post('/:orderid/updateMessage', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocolate.findOne({"order": orderid});
+	const order = await req.app.locals.chocDb.collection('order').findOne({"order": orderid});
 	if (order) {
 		const itemIndex = req.body.item;
 		order.content[itemIndex].uri = req.body.content;
 		console.log(order);
-		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+		await req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order)
 		res.redirect('create');
 	} else {
 		res.status(404).send();
@@ -135,7 +139,7 @@ router.post('/:orderid/updateMessage', async (req, res) => {
 
 router.post('/:orderid/addFile', upload.single('file'), async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocolate.findOne({"order": orderid})
+	const order = await req.app.locals.chocDb.collection('order').findOne({"order": orderid})
 	if (order) {
 		let uri = req.file.path;
 		uri = uri.replace(uploadDir, uploadUri);
@@ -143,7 +147,7 @@ router.post('/:orderid/addFile', upload.single('file'), async (req, res) => {
 			"uri": uri,
 			"mimetype": req.file.mimetype
 		});
-		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+		await req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order)
 		res.redirect('create');
 	} else {
 		res.status(404).send();
@@ -170,7 +174,7 @@ async function fetchTimeout(url, time) {
 const youtubeMatcher = new RegExp('^(?:.+?)?(?:\\/v\\/|watch\\/|\\?v=|&v=|youtu\\.be\\/|\\/v=|^youtu\\.be\\/|watch%3Fv%3D)([a-zA-Z0-9_-]{11})+$', 'i');
 router.post('/:orderid/addLink', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocolate.findOne({"order": orderid})
+	const order = await req.app.locals.chocDb.collection('order').findOne({"order": orderid})
 	let uri = req.body.link.trim();
 	const match = uri.match(youtubeMatcher);
 	if (match) {
@@ -178,7 +182,7 @@ router.post('/:orderid/addLink', async (req, res) => {
 			"uri": match[1],
 			"mimetype": 'video/youtube'
 		});
-		await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+		await req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order)
 		res.redirect('create');
 	} else {
 		try {
@@ -204,14 +208,14 @@ router.post('/:orderid/addLink', async (req, res) => {
 					"provider": metadata.provider
 				});
 			}
-			await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+			await req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order)
 			res.redirect('create');
 		} catch (e) {
 			order.content.push({
 				"uri": uri,
 				"mimetype": 'text/x-uri'
 			});
-			await req.app.locals.chocolate.replaceOne({"order": orderid}, order)
+			await req.app.locals.chocDb.collection('order').replaceOne({"order": orderid}, order)
 			res.redirect('create');
 		}
 	}
