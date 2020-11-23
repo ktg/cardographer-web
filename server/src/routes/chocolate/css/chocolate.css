@@ -97,6 +97,8 @@ input, textarea {
 	font-family: futura-lt-w01-book, sans-serif;
 	padding: 4px 8px;
 	border-radius: 0;
+	box-sizing: border-box;
+	border: 2px solid black;
 }
 
 button, input[type=submit], input[type=file]::-webkit-file-upload-button {

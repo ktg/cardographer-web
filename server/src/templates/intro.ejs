@@ -3,13 +3,19 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="css/chocolate.css">
+    <style>
+		#login {
+			display: none;
+		}
+    </style>
 </head>
 <body>
 <img src="images/choclogo.webp" class="logo">
-<div>Welcome. Make your gift into a hybrid gift by adding some personal digital content to it.</div>
-<div>Enter your order number to get started.</div>
+<div>Welcome. Make your gift into a hybrid gift by adding some personal digital content to it. Enter your order number
+    and a password to get started, or <a href="#" id="loginLink">login</a> to edit an existing gift.
+</div>
 
-<form action="create" method="post">
+<form id="create" action="create" method="post">
     <div class="list">
         <input type="number" name="order" placeholder="Order Number">
         <input type="password" name="password" placeholder="Password">
@@ -18,13 +24,20 @@
     </div>
 </form>
 
-<form action="login" method="post">
+<form id="login" action="login" method="post">
     <div class="list">
         <input type="number" name="order" placeholder="Order Number">
         <input type="password" name="password" placeholder="Password">
         <input type="submit" value="Login">
     </div>
 </form>
+
+<script>
+	document.getElementById('loginLink').addEventListener('click', () => {
+		document.getElementById('create').style.display = 'none';
+		document.getElementById('login').style.display = 'block';
+	});
+</script>
 
 </body>
 </html>
