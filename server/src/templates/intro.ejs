@@ -6,20 +6,24 @@
 </head>
 <body>
 <img src="images/choclogo.webp" class="logo">
-<div>Welcome. Make your gift into a hybrid gift by adding some personal digital content to it. </div>
+<div>Welcome. Make your gift into a hybrid gift by adding some personal digital content to it.</div>
 <div>Enter your order number to get started.</div>
 
-<form>
-    <input type="number" name="order" placeholder="Order Number">
-    <input type="password" name="password" placeholder="Password">
-    <input type="password" name="confirm" placeholder="Confirm Password">
-    <input type="submit" value="Create">
+<form action="create" method="post">
+    <div class="list">
+        <input type="number" name="order" placeholder="Order Number">
+        <input type="password" name="password" placeholder="Password">
+        <input type="password" name="confirm" placeholder="Confirm Password">
+        <input type="submit" value="Create">
+    </div>
 </form>
 
-<form>
-    <input type="number" name="order" placeholder="Order Number">
-    <input type="password" name="password" placeholder="Password">
-    <input type="submit" value="Login">
+<form action="login" method="post">
+    <div class="list">
+        <input type="number" name="order" placeholder="Order Number">
+        <input type="password" name="password" placeholder="Password">
+        <input type="submit" value="Login">
+    </div>
 </form>
 
 </body>

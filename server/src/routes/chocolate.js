@@ -54,18 +54,17 @@ router.post('/create', async (req, res) => {
 		const password = req.body.password + global_salt + salt;
 		const hash = crypto.createHash('sha256').update(password).digest('hex');
 		const session = namegen();
-		const item = {
+
+		await req.app.locals.chocDb.collection('gift').insertOne({
 			"order": orderid,
 			"hash": hash,
 			"salt": salt,
 			"session": session,
 			"content": []
-		}
+		});
+		log(req, orderid, "Gift " + orderid + " created");
 
-		await req.app.locals.chocDb.collection('gift').insertOne(item);
-		log(req, orderid, "Gift created");
-
-		res.cookie('session', session, {expires: s});
+		res.cookie('session', session);
 		res.redirect('gift/' + orderid + '/edit');
 	}
 });
@@ -91,21 +90,25 @@ router.post('/login', async (req, res) => {
 	}
 });
 
-
 router.get('/api/list', (req, res) => {
 	req.app.locals.chocDb.collection('gift').find().toArray()
 		.then((result) => {
-			result.forEach((item) => {
-				delete item.hash;
-				delete item.salt;
-				delete item.session;
-			});
+			// result.forEach((item) => {
+			// 	delete item.hash;
+			// 	delete item.salt;
+			// 	delete item.session;
+			// });
 			res.json(result);
 		})
 		.catch((err) => {
 			console.log(err);
 			res.status(500).send(err);
 		});
+});
+
+router.get('/api/logs', async (req, res) => {
+	const result = await req.app.locals.chocDb.collection('log').find().toArray()
+	res.json(result);
 });
 
 router.get('/gift/:orderid', async (req, res) => {
@@ -121,7 +124,6 @@ router.get('/gift/:orderid', async (req, res) => {
 router.get('/gift/:orderid/edit', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
-	console.log(order);
 	if (order) {
 		const session = req.cookies.session;
 		if (order.session !== session) {
@@ -140,7 +142,6 @@ router.post('/gift/:orderid/deleteItem', async (req, res) => {
 	if (order) {
 		const removeIndex = req.body.item;
 		let uri = order.content[removeIndex].uri;
-		console.log(uri);
 		if ((typeof uri === 'string' || uri instanceof String) && uri.startsWith(uploadUri)) {
 			uri = uri.replace(uploadUri, uploadDir)
 			if (fs.existsSync(uri)) {

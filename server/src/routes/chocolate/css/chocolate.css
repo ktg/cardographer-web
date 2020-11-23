@@ -1,11 +1,34 @@
+@font-face {
+	font-family: "Futura-LT-W01-Book";
+	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/cf053eae-ba1f-44f3-940c-a34b68ccbbdf.eot?#iefix");
+	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/cf053eae-ba1f-44f3-940c-a34b68ccbbdf.eot?#iefix") format("eot"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/8bf38806-3423-4080-b38f-d08542f7e4ac.woff2") format("woff2"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/e2b9cbeb-fa8e-41cd-8a6a-46044b29ba52.woff") format("woff"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/c2a69697-4f06-4764-abd4-625031a84e31.ttf") format("truetype"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/dc423cc1-bf86-415c-bc7d-ad7dde416a34.svg#dc423cc1-bf86-415c-bc7d-ad7dde416a34") format("svg");
+}
+
+@font-face {
+	font-family: "Lulo-Clean-W01-One-Bold";
+	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/0163ac22-50a7-406e-aa64-c62ee6fbf3d7.eot?#iefix");
+	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/0163ac22-50a7-406e-aa64-c62ee6fbf3d7.eot?#iefix") format("eot"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/aee74cb3-c913-4b54-9722-6001c92325f2.woff2") format("woff2"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/80de9d5d-ab5f-40ce-911b-104e51e93d7c.woff") format("woff"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/1b46b05b-cfdd-4d82-8c2f-5c6cfba1fe60.ttf") format("truetype"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/be340f0b-a2d4-41df-acb1-4dc124330a88.svg#be340f0b-a2d4-41df-acb1-4dc124330a88") format("svg");
+}
+
 body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	font-family: futura-lt-w01-book, sans-serif;
 }
 
 .logo {
 	width: 148px;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+}
+
+.list > * {
+	margin: 2px;
 }
 
 .items {
@@ -56,7 +79,6 @@ body {
 }
 
 .linkDescription {
-	font-family: futura-lt-w01-book, sans-serif;
 	font-size: 15px;
 	color: #000;
 }
@@ -69,6 +91,12 @@ video, audio, img, iframe, textarea {
 iframe {
 	border: 0;
 	height: 280px;
+}
+
+input, textarea {
+	font-family: futura-lt-w01-book, sans-serif;
+	padding: 4px 8px;
+	border-radius: 0;
 }
 
 button, input[type=submit], input[type=file]::-webkit-file-upload-button {
