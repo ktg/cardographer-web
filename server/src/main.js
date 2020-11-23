@@ -18,7 +18,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/dump', require('./routes/cardographer'));
 app.use('/api/xSpace', require('./routes/xSpace'));
-app.use('/chocolate', require('./routes/chocolate'))
+app.use('/chocolate', require('./routes/chocolate'));
 
 //app.use(express.static('static'));
 
