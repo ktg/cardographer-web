@@ -79,7 +79,7 @@ router.post('/login', async (req, res) => {
 			order.session = namegen();
 			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 
-			res.cookie('session', order.session, {expires: s});
+			res.cookie('session', order.session);
 			res.redirect('gift/' + orderid + '/edit');
 		} else {
 			// TODO Handle error
