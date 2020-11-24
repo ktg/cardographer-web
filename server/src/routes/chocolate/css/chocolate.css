@@ -101,6 +101,10 @@ input, textarea {
 	border: 2px solid black;
 }
 
+input:invalid {
+	border: 2px solid maroon;
+}
+
 button, input[type=submit], input[type=file]::-webkit-file-upload-button {
 	font: italic normal normal 17px/21px georgia, palatino, "book antiqua", "palatino linotype", serif;
 	color: rgb(255, 255, 255);

@@ -11,23 +11,24 @@
 </head>
 <body>
 <img src="images/choclogo.webp" class="logo">
-<div>Welcome. Make your gift into a hybrid gift by adding some personal digital content to it. Enter your order number
-    and a password to get started, or <a href="#" id="loginLink">login</a> to edit an existing gift.
+<div style="max-width: 400px; padding-top: 16px;">Welcome. Make your gift into a hybrid gift by adding some personal
+    digital content to it. Enter your order number and a password to get started, or
+    <a href="#" id="loginLink">login</a> to edit an existing gift.
 </div>
 
 <form id="create" action="create" method="post">
     <div class="list">
-        <input type="number" name="order" placeholder="Order Number">
-        <input type="password" name="password" placeholder="Password">
-        <input type="password" name="confirm" placeholder="Confirm Password">
+        <input type="number" name="order" required min="1" placeholder="Order Number">
+        <input type="password" name="password" minlength="6" required placeholder="Password">
+        <input type="password" name="confirm" minlength="6" required placeholder="Confirm Password">
         <input type="submit" value="Create">
     </div>
 </form>
 
 <form id="login" action="login" method="post">
     <div class="list">
-        <input type="number" name="order" placeholder="Order Number">
-        <input type="password" name="password" placeholder="Password">
+        <input type="number" name="order" required min="1" placeholder="Order Number">
+        <input type="password" name="password" minlength="6" required placeholder="Password">
         <input type="submit" value="Login">
     </div>
 </form>
