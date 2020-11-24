@@ -15,7 +15,7 @@ const AbortController = require('abort-controller');
 const global_salt = "-hybrid-choco-gifting-";
 
 const uploadDir = process.cwd() + '/uploads/chocolate/';
-const uploadUri = '/chocolate/uploads/'
+const uploadUri = '../../uploads/'
 
 const namegen = nanoid.customAlphabet('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15);
 const upload = multer({
