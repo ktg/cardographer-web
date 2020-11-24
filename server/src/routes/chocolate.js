@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const cookieParser = require("cookie-parser");
 const path = require('path');
+const QRCode = require('qrcode');
 const crypto = require('crypto');
 const fs = require('fs');
 const {getMetadata} = require('page-metadata-parser');
@@ -88,6 +89,12 @@ router.post('/login', async (req, res) => {
 	} else {
 		res.status(404).send("Not Found");
 	}
+});
+
+router.get('/qrcode/:orderid', async (req, res) => {
+	const orderid = req.body.order;
+	const url = 'http://hybridgifting.com/gift/' + orderid;
+	await QRCode.toFileStream(res, url);
 });
 
 router.get('/api/list', (req, res) => {
