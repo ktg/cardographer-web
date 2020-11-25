@@ -2,41 +2,45 @@
 <html lang="en">
 <head>
     <title></title>
-    <link rel="stylesheet" href="../../css/chocolate.css">
+    <link rel="stylesheet" href="<%= prefix %>../css/chocolate.css">
 
-    <link rel="icon" type="image/webp" href="../../images/choclogo.webp" />
+    <link rel="icon" type="image/webp" href="<%= prefix %>../images/choclogo.webp"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<img src="../../images/choclogo.webp" class="logo">
+<img src="<%= prefix %>../images/choclogo.webp" class="logo">
 <div class="items">
-    <% content.forEach((contentItem) => { %>
-        <div class="item">
-            <% if(contentItem.mimetype.startsWith("image/")) { %>
-                <img src="<%= contentItem.uri %>"/>
-            <% } else if(contentItem.mimetype === 'video/youtube') { %>
-                <iframe src="https://www.youtube.com/embed/<%= contentItem.uri %>">
-                </iframe>
-            <% } else if(contentItem.mimetype.startsWith("video/")) { %>
-                <video src="<%= contentItem.uri %>" controls></video>
-            <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
-                <audio src="<%= contentItem.uri %>" controls></audio>
-            <% } else if(contentItem.mimetype === 'text/plain') { %>
-                <div><%= contentItem.uri %></div>
-            <% } else if(contentItem.mimetype === 'text/x-uri') { %>
-                <div>
-                    <a href="<%= contentItem.uri %>" class="link">
-                        <% if(contentItem.image) { %>
-                            <div><img src="<%= contentItem.image %>"></div>
-                        <% } %>
-                        <% if(contentItem.provider) { %>
-                            <div class="linkProvider"><%= contentItem.provider %></div>
-                        <% } %>
-                        <div class="linkTitle"><%= contentItem.title || contentItem.uri %></div>
-                        <% if(contentItem.description) { %>
-                            <div class="linkDescription"><%= contentItem.description %></div>
-                        <% } %>
-                    </a>
-                </div>
+    <% content.forEach((contentItem, index) => { %>
+        <div class="item"
+             style="background-color: <%= index === 0 || index === 3 ? '#ffebe3' : index === 1 ? '#fab89d' : '#d1c8e1' %>">
+            <% if(contentItem && contentItem.mimetype) { %>
+                <% if(contentItem.mimetype.startsWith("image/")) { %>
+                    <img src="<%= contentItem.uri %>"/>
+                <% } else if(contentItem.mimetype === 'video/youtube') { %>
+                    <iframe src="https://www.youtube.com/embed/<%= contentItem.uri %>">
+                    </iframe>
+                <% } else if(contentItem.mimetype.startsWith("video/")) { %>
+                    <video src="<%= contentItem.uri %>" controls></video>
+                <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
+                    <audio src="<%= contentItem.uri %>" controls></audio>
+                <% } else if(contentItem.mimetype === 'text/plain') { %>
+                    <div style="padding: 32px"><%= contentItem.uri %></div>
+                <% } else if(contentItem.mimetype === 'text/x-uri') { %>
+                    <div>
+                        <a href="<%= contentItem.uri %>" target="_blank" class="link">
+                            <% if(contentItem.image) { %>
+                                <div><img src="<%= contentItem.image %>"></div>
+                            <% } %>
+                            <% if(contentItem.provider) { %>
+                                <div class="linkProvider"><%= contentItem.provider %></div>
+                            <% } %>
+                            <div class="linkTitle"><%= contentItem.title || contentItem.uri %></div>
+                            <% if(contentItem.description) { %>
+                                <div class="linkDescription"><%= contentItem.description %></div>
+                            <% } %>
+                        </a>
+                    </div>
+                <% } %>
             <% } %>
         </div>
     <% }); %>

@@ -11,6 +11,7 @@
 }
 
 body {
+	margin: 16px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -41,24 +42,25 @@ body {
 
 .item {
 	flex: 1 1 300px;
-	margin: 8px;
-	align-self: center;
-	justify-self: center;
+	min-height: 250px;
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 #uploader, #linker {
 	display: none;
 }
 
-#contentButtons {
+.contentButtons {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	max-width: 400px;
-}
-
-#contentButtons > * {
-	margin: 4px;
+	flex-direction: column;
+	align-items: center;
 }
 
 .link {
@@ -68,6 +70,7 @@ body {
 .linkProvider {
 	color: #666;
 	font-size: smaller;
+	padding: 0 32px;
 }
 
 .linkTitle {
@@ -76,11 +79,24 @@ body {
 	letter-spacing: 0.15em;
 	font-weight: bold;
 	color: #000;
+	padding: 0 32px;
+}
+
+#create input[type=submit] {
+	padding-top: 8px;
+	background-color: #fab89d;
+}
+
+#create input[type=submit]:disabled {
+	color: #CCC;
+	background-color: #999;
+	opacity: 0.5;
 }
 
 .linkDescription {
 	font-size: 15px;
 	color: #000;
+	padding: 0 32px;
 }
 
 video, audio, img, iframe, textarea {
@@ -91,6 +107,22 @@ video, audio, img, iframe, textarea {
 iframe {
 	border: 0;
 	height: 280px;
+}
+
+textarea {
+	background-color: transparent;
+	width: 100%;
+	border-color: #0001;
+	font-size: medium;
+}
+
+textarea:hover {
+	border-color: #0006;
+}
+
+.error {
+	color: maroon;
+	font-size: smaller;
 }
 
 input, textarea {
@@ -105,13 +137,40 @@ input:invalid {
 	border: 2px solid maroon;
 }
 
-button, input[type=submit], input[type=file]::-webkit-file-upload-button {
+input.field {
+	border: 0;
+	padding: 0;
+	border-bottom: 1px solid black;
+}
+
+input.validate:invalid {
+	border-color: red;
+	border-width: 2px;
+}
+
+input.field:focus, input.field:focus:invalid {
+	border-width: 1px;
+}
+
+input:focus, input:focus:invalid, textarea:focus {
+	outline: none;
+	border-radius: 0;
+	border-color: #fab89d;
+}
+
+label {
+	color: #555;
+	font-size: smaller;
+	padding-top: 8px;
+}
+
+button, input[type=submit] {
 	font: italic normal normal 17px/21px georgia, palatino, "book antiqua", "palatino linotype", serif;
-	color: rgb(255, 255, 255);
-	background-color: rgb(0, 0, 0);
-	border-color: rgb(255, 255, 255);
+	color: #FFF;
+	background-color: #000;
+	border-color: #FFF;
 	border-width: 0;
 	border-radius: 0;
-	padding: 4px 16px;
-	margin-top: 2px;
+	padding: 6px 24px;
+	margin: 6px 8px;
 }

@@ -8,7 +8,8 @@
 			display: none;
 		}
     </style>
-    <link rel="icon" type="image/webp" href="images/choclogo.webp" />
+    <link rel="icon" type="image/webp" href="images/choclogo.webp"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <img src="images/choclogo.webp" class="logo">
@@ -19,28 +20,93 @@
 
 <form id="create" action="create" method="post">
     <div class="list">
-        <input type="number" name="order" required min="1" placeholder="Order Number">
-        <input type="password" name="password" minlength="6" required placeholder="Password">
-        <input type="password" name="confirm" minlength="6" required placeholder="Confirm Password">
-        <input type="submit" value="Create">
+        <label for="createOrder">Order Number</label>
+        <input id="createOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+">
+        <label for="createPass">Password</label>
+        <input id="createPass" class="field" type="password" name="password" minlength="6" required>
+        <label for="createConfirm">Confirm Password</label>
+        <input id="createConfirm" class="field" type="password" name="confirm" minlength="6" required>
+        <div id="createError" class="error"></div>
+        <input id="createSubmit" type="submit" value="Create" disabled>
     </div>
 </form>
 
 <form id="login" action="login" method="post">
     <div class="list">
-        <input type="number" name="order" required min="1" placeholder="Order Number">
-        <input type="password" name="password" minlength="6" required placeholder="Password">
+        <input type="number" name="order" autofocus required min="1">
+        <input type="password" name="password" minlength="6" required>
         <input type="submit" value="Login">
     </div>
 </form>
 
 <script>
+	const createForm = document.getElementById('create')
+
+    function hideErrors() {
+
+    }
+
+	function validateCreate() {
+		const inputs = createForm.getElementsByTagName('input')
+		const inputArray = Array.prototype.slice.call(inputs);
+		let valid = true;
+		let error = null;
+		inputArray.forEach((item) => {
+			valid = valid && item.validity.valid;
+			if(item !== document.activeElement && item.classList.contains('validate')) {
+				error = error || item.validationMessage;
+			}
+		});
+
+		document.getElementById('createSubmit').disabled = !valid;
+		document.getElementById('createError').innerText = error;
+	}
+
+	const inputs = document.getElementsByTagName('input')
+	const inputArray = Array.prototype.slice.call(inputs);
+	inputArray.forEach((item) => {
+		item.addEventListener('blur', () => {
+			item.classList.add('validate');
+			validateCreate();
+		});
+
+		item.addEventListener('input', () => {
+			validateCreate();
+			hideErrors();
+		});
+	});
+
 	document.getElementById('loginLink').addEventListener('click', () => {
 		document.getElementById('create').style.display = 'none';
 		document.getElementById('login').style.display = 'block';
 	});
 
+	const createOrder = document.getElementById('createOrder');
+	const createPass = document.getElementById('createPass');
+	const createConfirm = document.getElementById('createConfirm');
 
+	createConfirm.addEventListener('input', () => {
+		createConfirm.setCustomValidity('');
+	});
+
+	createConfirm.addEventListener('blur', () => {
+		if (createPass.value !== createConfirm.value) {
+			createConfirm.setCustomValidity('Passwords must match.')
+		}
+	});
+
+	createForm.addEventListener('submit', (event) => {
+		const inputs = createForm.getElementsByTagName('input')
+		const inputArray = Array.prototype.slice.call(inputs);
+		let valid = true;
+		inputArray.forEach((item) => {
+			valid = valid && item.validity.valid;
+		});
+
+		if (!valid) {
+			event.preventDefault();
+		}
+	});
 </script>
 
 </body>
