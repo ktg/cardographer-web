@@ -3,11 +3,6 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="css/chocolate.css">
-    <style>
-		#login {
-			display: none;
-		}
-    </style>
     <link rel="icon" type="image/webp" href="images/choclogo.webp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -18,33 +13,34 @@
     <a href="#" id="loginLink">login</a> to edit an existing gift.
 </div>
 
-<form id="create" action="create" method="post">
+<form id="create" action="create" method="post" <%= login === true ? 'style=display:none' : '' %>>
     <div class="list">
         <label for="createOrder">Order Number</label>
-        <input id="createOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+">
+        <input id="createOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
+               value="<%= order %>">
         <label for="createPass">Password</label>
         <input id="createPass" class="field" type="password" name="password" minlength="6" required>
         <label for="createConfirm">Confirm Password</label>
         <input id="createConfirm" class="field" type="password" name="confirm" minlength="6" required>
-        <div id="createError" class="error"></div>
-        <input id="createSubmit" type="submit" value="Create" disabled>
+        <div id="createError" class="error"><%= login !== true ? error : '' %></div>
+        <input id="createSubmit" type="submit" value="Create" class="field" disabled>
     </div>
 </form>
 
-<form id="login" action="login" method="post">
+<form id="login" action="login" method="post" <%= login !== true ? 'style=display:none' : '' %>>
     <div class="list">
-        <input type="number" name="order" autofocus required min="1">
-        <input type="password" name="password" minlength="6" required>
-        <input type="submit" value="Login">
+        <label for="loginOrder">Order Number</label>
+        <input id="loginOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
+               value="<%= order %>">
+        <label for="loginPass">Password</label>
+        <input id="loginPass" class="field" type="password" name="password" minlength="6" required>
+        <div id="loginError" class="error"><%= login === true ? error : '' %></div>
+        <input id="loginSubmit" type="submit" value="Login" class="field" disabled>
     </div>
 </form>
 
 <script>
 	const createForm = document.getElementById('create')
-
-    function hideErrors() {
-
-    }
 
 	function validateCreate() {
 		const inputs = createForm.getElementsByTagName('input')
@@ -53,16 +49,24 @@
 		let error = null;
 		inputArray.forEach((item) => {
 			valid = valid && item.validity.valid;
-			if(item !== document.activeElement && item.classList.contains('validate')) {
+			if (item !== document.activeElement && item.classList.contains('validate')) {
 				error = error || item.validationMessage;
 			}
 		});
 
 		document.getElementById('createSubmit').disabled = !valid;
 		document.getElementById('createError').innerText = error;
+		return valid;
 	}
 
-	const inputs = document.getElementsByTagName('input')
+	createForm.addEventListener('submit', (event) => {
+		let valid = validateCreate();
+		if (!valid) {
+			event.preventDefault();
+		}
+	});
+
+	const inputs = createForm.getElementsByTagName('input')
 	const inputArray = Array.prototype.slice.call(inputs);
 	inputArray.forEach((item) => {
 		item.addEventListener('blur', () => {
@@ -72,19 +76,21 @@
 
 		item.addEventListener('input', () => {
 			validateCreate();
-			hideErrors();
 		});
 	});
 
 	document.getElementById('loginLink').addEventListener('click', () => {
-		document.getElementById('create').style.display = 'none';
-		document.getElementById('login').style.display = 'block';
+		if(createForm.style.display === 'none') {
+			document.getElementById('create').style.display = 'block';
+			document.getElementById('login').style.display = 'none';
+		} else {
+			document.getElementById('create').style.display = 'none';
+			document.getElementById('login').style.display = 'block';
+        }
 	});
 
-	const createOrder = document.getElementById('createOrder');
 	const createPass = document.getElementById('createPass');
 	const createConfirm = document.getElementById('createConfirm');
-
 	createConfirm.addEventListener('input', () => {
 		createConfirm.setCustomValidity('');
 	});
@@ -95,19 +101,44 @@
 		}
 	});
 
-	createForm.addEventListener('submit', (event) => {
-		const inputs = createForm.getElementsByTagName('input')
+	const loginForm = document.getElementById('login')
+
+	function validateLogin() {
+		const inputs = loginForm.getElementsByTagName('input')
 		const inputArray = Array.prototype.slice.call(inputs);
 		let valid = true;
+		let error = null;
 		inputArray.forEach((item) => {
 			valid = valid && item.validity.valid;
+			if (item !== document.activeElement && item.classList.contains('validate')) {
+				error = error || item.validationMessage;
+			}
 		});
 
+		document.getElementById('loginSubmit').disabled = !valid;
+		document.getElementById('loginError').innerText = error;
+		return valid;
+	}
+
+	createForm.addEventListener('submit', (event) => {
+		let valid = validateCreate();
 		if (!valid) {
 			event.preventDefault();
 		}
 	});
-</script>
 
+	const loginInputs = loginForm.getElementsByTagName('input')
+	const loginArray = Array.prototype.slice.call(loginInputs);
+	loginArray.forEach((item) => {
+		item.addEventListener('blur', () => {
+			item.classList.add('validate');
+			validateLogin();
+		});
+
+		item.addEventListener('input', () => {
+			validateLogin();
+		});
+	});
+</script>
 </body>
 </html>

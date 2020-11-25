@@ -19,13 +19,14 @@ body {
 }
 
 .logo {
-	width: 148px;
+	width: 250px;
 }
 
 .list {
 	display: flex;
 	flex-direction: column;
 	padding: 8px;
+	width: 200px;
 }
 
 .list > * {
@@ -50,8 +51,9 @@ body {
 	align-items: center;
 }
 
-#uploader, #linker {
-	display: none;
+.message {
+	padding: 32px;
+	white-space: pre-line;
 }
 
 .contentButtons {
@@ -82,12 +84,12 @@ body {
 	padding: 0 32px;
 }
 
-#create input[type=submit] {
+input[type=submit].field {
 	padding-top: 8px;
 	background-color: #fab89d;
 }
 
-#create input[type=submit]:disabled {
+input[type=submit]:disabled.field {
 	color: #CCC;
 	background-color: #999;
 	opacity: 0.5;
@@ -109,17 +111,6 @@ iframe {
 	height: 280px;
 }
 
-textarea {
-	background-color: transparent;
-	width: 100%;
-	border-color: #0001;
-	font-size: medium;
-}
-
-textarea:hover {
-	border-color: #0006;
-}
-
 .error {
 	color: maroon;
 	font-size: smaller;
@@ -131,6 +122,29 @@ input, textarea {
 	border-radius: 0;
 	box-sizing: border-box;
 	border: 2px solid black;
+}
+
+.messageEdit {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+textarea {
+	background-color: transparent;
+	width: 100%;
+	border-color: #0001;
+	font-size: medium;
+	align-self: stretch;
+}
+
+textarea:hover {
+	border-color: #0006;
+}
+
+textarea:focus {
+	border-color: #000;
 }
 
 input:invalid {
@@ -152,7 +166,7 @@ input.field:focus, input.field:focus:invalid {
 	border-width: 1px;
 }
 
-input:focus, input:focus:invalid, textarea:focus {
+input:focus, input:focus:invalid {
 	outline: none;
 	border-radius: 0;
 	border-color: #fab89d;

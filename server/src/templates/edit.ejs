@@ -3,7 +3,6 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="../../css/chocolate.css">
-    <script src="../../js/addContent.js" defer></script>
     <link rel="icon" type="image/webp" href="../../images/choclogo.webp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -24,10 +23,12 @@
                 <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
                     <audio src="<%= contentItem.uri %>" controls></audio>
                 <% } else if(contentItem.mimetype === 'text/plain') { %>
-                    <form action="updateMessage" method="post">
+                    <form action="updateMessage" method="post" class="messageEdit">
                         <textarea name="content" rows="10"><%= contentItem.uri %></textarea>
                         <input type="hidden" name="item" value="<%= index %>">
+                        <div style="display: flex;">
                         <input type="submit" value="Save Message">
+                        </div>
                     </form>
                 <% } else if(contentItem.mimetype === 'text/x-uri') { %>
                     <% if(contentItem.uri) { %>
@@ -70,10 +71,45 @@
                     <input id="uploadInput<%= index %>" type="file" name="file" accept="image/*, video/*, audio/*"
                            style="display: none">
                 </form>
+                <div id="uploadError" class="error" style="padding: 4px 64px"></div>
             <% } %>
         </div>
     <% }); %>
 </div>
 <a href="." target="_blank">Preview</a>
+<script defer>
+	const maxFileSize = 1000000;
+
+	function humanFileSize(bytes, si = true, dp = 1) {
+		const thresh = si ? 1000 : 1024;
+		if (Math.abs(bytes) < thresh) {
+			return bytes + ' B';
+		}
+
+		const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+		let u = -1;
+		const r = 10 ** dp;
+
+		do {
+			bytes /= thresh;
+			++u;
+		} while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+		return bytes.toFixed(dp) + ' ' + units[u];
+	}
+
+	document.querySelectorAll("input[type=file]").forEach((input) => {
+		console.log(input);
+		input.addEventListener('change', (event) => {
+			const size = event.target.files[0].size;
+			console.log(event.target.files[0].size);
+			if (size < maxFileSize) {
+				event.target.form.submit();
+			} else {
+				document.getElementById('uploadError').innerText = 'This server only allows uploads up to ' + humanFileSize(maxFileSize) + '. ' + event.target.files[0].name + ' is ' + humanFileSize(size) + '. If you are unable to make it any smaller, you can upload the file elsewhere and link to it.';
+			}
+		})
+	});
+</script>
 </body>
 </html>

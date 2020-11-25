@@ -33,10 +33,11 @@ router.use('/', express.static(__dirname + '/chocolate/'));
 router.use(cookieParser());
 
 router.get('/', (req, res) => {
-	res.render('intro.ejs');
+	res.render('intro.ejs', {order: '', login: false, error: ''});
 });
 
 function log(req, orderid, message) {
+	// noinspection JSIgnoredPromiseFromCall
 	req.app.locals.chocDb.collection('log').insertOne({
 		"time": new Date().getTime(),
 		"gift": orderid,
@@ -47,25 +48,17 @@ function log(req, orderid, message) {
 router.post('/create', async (req, res) => {
 	const orderid = req.body.order;
 	if (!orderid || !req.body.password || !req.body.confirm) {
-		// TODO Handle error
-		// Fields missing
-		res.redirect('..?e=2');
+		res.render('intro.ejs', {order: orderid, login: false, error: 'Missing order or passwords'});
 	}
 	if (typeof orderid === 'number' && isFinite(orderid)) {
-		// TODO Handle error
-		// Fields missing
-		res.redirect('..?e=2');
+		res.render('intro.ejs', {order: orderid, login: false, error: 'Order is not a valid number'});
 	}
 	if (req.body.password !== req.body.confirm) {
-		// TODO Handle error
-		// Fields missing
-		res.redirect('..?e=2');
+		res.render('intro.ejs', {order: orderid, login: false, error: 'Passwords must match'});
 	}
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order != null) {
-		// TODO Handle error
-		// Order already exists
-		res.redirect('..?e=2');
+		res.render('intro.ejs', {order: orderid, login: false, error: 'That order already exists'});
 	} else {
 		const salt = namegen();
 		const password = req.body.password + global_salt + salt;
@@ -89,14 +82,10 @@ router.post('/create', async (req, res) => {
 router.post('/login', async (req, res) => {
 	const orderid = req.body.order;
 	if (!orderid || !req.body.password) {
-		// TODO Handle error
-		// Fields missing
-		res.redirect('..?e=2');
+		res.render('intro.ejs', {order: orderid, login: true, error: 'Missing order or password'});
 	}
 	if (typeof orderid === 'number' && isFinite(orderid)) {
-		// TODO Handle error
-		// Fields missing
-		res.redirect('..?e=2');
+		res.render('intro.ejs', {order: orderid, login: true, error: 'Order is not a valid number'});
 	}
 
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
@@ -110,11 +99,10 @@ router.post('/login', async (req, res) => {
 			res.cookie('session', order.session);
 			res.redirect('gift/' + orderid + '/edit');
 		} else {
-			// TODO Handle error
-			res.redirect('..?e=1');
+			res.render('intro.ejs', {order: orderid, login: true, error: 'Order and password do not match'});
 		}
 	} else {
-		res.status(404).send("Not Found");
+		res.render('intro.ejs', {order: orderid, login: true, error: 'Order and password do not match'});
 	}
 });
 
