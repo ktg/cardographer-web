@@ -27,7 +27,7 @@
                         <textarea name="content" rows="10"><%= contentItem.uri %></textarea>
                         <input type="hidden" name="item" value="<%= index %>">
                         <div style="display: flex;">
-                        <input type="submit" value="Save Message">
+                            <input type="submit" value="Save Message">
                         </div>
                     </form>
                 <% } else if(contentItem.mimetype === 'text/x-uri') { %>
@@ -75,8 +75,14 @@
             <% } %>
         </div>
     <% }); %>
+    <div style="display: flex; flex: 1 1 300px">
+        <img src="../../images/uon.svg" style="width: 150px; align-self: center; padding-top: 12px"/>
+        <!--<div style="font-size: smaller; padding-left: 12px; padding-top: 12px">Developed by the University of Nottingham. To help our research,
+            please consider taking this short questionnaire.
+        </div>-->
+    </div>
+    <a href="." target="_blank" style="flex: 1 1 300px; padding: 24px; text-align: end">Preview</a>
 </div>
-<a href="." target="_blank">Preview</a>
 <script defer>
 	const maxFileSize = 1000000;
 

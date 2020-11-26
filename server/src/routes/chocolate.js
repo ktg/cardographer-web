@@ -70,6 +70,7 @@ router.post('/create', async (req, res) => {
 			"hash": hash,
 			"salt": salt,
 			"session": session,
+			"creation": new Date().getTime(),
 			"content": [{}, {}, {}, {}]
 		});
 		log(req, orderid, "Gift " + orderid + " created");
@@ -112,21 +113,36 @@ router.get('/qrcode/:orderid', async (req, res) => {
 	await QRCode.toFileStream(res, url);
 });
 
-router.get('/api/list', (req, res) => {
-	req.app.locals.chocDb.collection('gift').find().toArray()
-		.then((result) => {
-			// result.forEach((item) => {
-			// 	delete item.hash;
-			// 	delete item.salt;
-			// 	delete item.session;
-			// });
-			res.json(result);
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
+router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
+	const pageOrders = 20;
+	const page = req.query.page || 0;
+	const start = page * pageOrders;
+	const count = await req.app.locals.chocDb.collection('gift').count();
+	const orders = await req.app.locals.chocDb.collection('gift').find().sort({
+		creation: -1,
+		order: -1
+	}).collation({locale: "en_US", numericOrdering: true}).skip(start).limit(pageOrders).toArray()
+	const end = start + orders.length;
+	console.log(end);
+	console.log(count);
+	res.render('list.ejs', {orders: orders, page: page, nextPage: end < count, prevPage: page != 0})
 });
+
+// router.get('/api/list', (req, res) => {
+// 	req.app.locals.chocDb.collection('gift').find().toArray()
+// 		.then((result) => {
+// 			// result.forEach((item) => {
+// 			// 	delete item.hash;
+// 			// 	delete item.salt;
+// 			// 	delete item.session;
+// 			// });
+// 			res.json(result);
+// 		})
+// 		.catch((err) => {
+// 			console.log(err);
+// 			res.status(500).send(err);
+// 		});
+// });
 
 router.get('/api/logs', async (req, res) => {
 	const result = await req.app.locals.chocDb.collection('log').find().toArray()
@@ -204,7 +220,7 @@ router.post('/gift/:orderid/addMessage', async (req, res) => {
 			mimetype: "text/plain"
 		};
 		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + index + " add message");
+		log(req, orderid, "Item " + index + " added message");
 		res.redirect('edit');
 	} else {
 		res.status(404).send("Not Found");
@@ -238,7 +254,7 @@ router.post('/gift/:orderid/addFile', upload.single('file'), async (req, res) =>
 			"mimetype": req.file.mimetype
 		};
 		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + index + " add " + req.file.mimetype);
+		log(req, orderid, "Item " + index + " added upload " + req.file.mimetype);
 		res.redirect('edit');
 	} else {
 		res.status(404).send();
@@ -271,7 +287,7 @@ router.post('/gift/:orderid/addLink', async (req, res) => {
 			mimetype: "text/x-uri"
 		};
 		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + index + " add link");
+		log(req, orderid, "Item " + index + " added link");
 		res.redirect('edit');
 	} else {
 		res.status(404).send("Not Found");
@@ -292,6 +308,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 				"mimetype": 'video/youtube'
 			};
 			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
+			log(req, orderid, "Item " + index + " edited link youtube: " + uri);
 			res.redirect('edit');
 		} else {
 			try {
@@ -302,6 +319,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 						"uri": uri,
 						"mimetype": contentType,
 					};
+					log(req, orderid, "Item " + index + " edited link " + contentType + ": " + uri);
 				} else {
 					const html = await response.text();
 					const doc = domino.createWindow(html).document;
@@ -317,6 +335,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 						"provider": metadata.provider
 					};
 				}
+				log(req, orderid, "Item " + index + " edited link " + uri);
 				await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
 				res.redirect('edit');
 			} catch (e) {
@@ -324,6 +343,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 					"uri": uri,
 					"mimetype": 'text/x-uri'
 				};
+				log(req, orderid, "Item " + index + " edited link " + uri);
 				await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
 				res.redirect('edit');
 			}

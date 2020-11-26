@@ -26,7 +26,7 @@
                 <% } else if(contentItem.mimetype === 'text/plain') { %>
                     <div class="message"><%= contentItem.uri %></div>
                 <% } else if(contentItem.mimetype === 'text/x-uri') { %>
-                    <div>
+                    <div style="padding-bottom: 32px">
                         <a href="<%= contentItem.uri %>" target="_blank" class="link">
                             <% if(contentItem.image) { %>
                                 <div><img src="<%= contentItem.image %>"></div>
@@ -44,6 +44,12 @@
             <% } %>
         </div>
     <% }); %>
+    <div style="display: flex; flex: 1 1 300px">
+        <img src="../../images/uon.svg" style="width: 150px; align-self: center; padding-top: 12px"/>
+        <!--<div style="font-size: smaller; padding-left: 12px; padding-top: 12px">Developed by the University of Nottingham. To help our research,
+            please consider taking this short questionnaire.
+        </div>-->
+    </div>
 </div>
 </body>
 </html>

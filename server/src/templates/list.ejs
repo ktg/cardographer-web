@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="../css/chocolate.css">
+    <link rel="icon" type="image/webp" href="../images/choclogo.webp"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<img src="../images/choclogo.webp" class="logo" style="width: 150px">
+
+<div class="list" style="width: 400px; align-items: center">
+    <% orders.forEach((order) => { %>
+        <div style="display: flex; align-items: center">
+            <div>Order&nbsp;<%= order.order %></div>
+            <a href="../qrcode/<%= order.order %>"><img src="../qrcode/<%= order.order %>" style="width: 100px"></a>
+        </div>
+    <% }); %>
+</div>
+<div>
+    <% if(prevPage) { %>
+        <a href="?page=<%= page - 1 %>">Prev Page</a>
+    <% } %>
+    <% if(nextPage) { %>
+        <a href="?page=<%= page + 1 %>">Next Page</a>
+    <% } %>
+</div>
+</body>
+</html>
