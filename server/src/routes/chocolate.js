@@ -141,11 +141,11 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 // 			res.status(500).send(err);
 // 		});
 // });
-//
-// router.get('/api/logs', async (req, res) => {
-// 	const result = await req.app.locals.chocDb.collection('log').find().toArray()
-// 	res.json(result);
-// });
+
+router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
+	const result = await req.app.locals.chocDb.collection('log').find().toArray()
+	res.json(result);
+});
 
 router.get('/gift/:orderid', async (req, res) => {
 	const orderid = req.params['orderid'];
@@ -162,6 +162,7 @@ router.get('/gift/:orderid', async (req, res) => {
 				}
 			})
 		}
+		log(req, orderid, "Viewed Gift");
 		res.render('view.ejs', order)
 	} else {
 		res.status(404).send("Not Found");
