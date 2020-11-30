@@ -41,6 +41,11 @@ body {
 	padding: 8px;
 }
 
+.quest {
+	font-weight: bold;
+	margin-top: 16px;
+}
+
 .item {
 	flex: 1 1 300px;
 	min-height: 250px;
