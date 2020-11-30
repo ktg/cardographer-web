@@ -13,7 +13,7 @@
     <a href="#" id="loginLink">login</a> to edit an existing gift.
 </div>
 
-<form id="create" action="create" method="post" <%= login === true ? 'style=display:none' : '' %>>
+<form id="create" action="create" method=   "post" <%= login === true ? 'style=display:none' : '' %>>
     <div class="list">
         <label for="createOrder">Order Number</label>
         <input id="createOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
@@ -38,6 +38,8 @@
         <input id="loginSubmit" type="submit" value="Login" class="field" disabled>
     </div>
 </form>
+
+<a href="faq.html" style="padding: 8px 16px; font-size: smaller">FAQs</a>
 
 <script>
 	const createForm = document.getElementById('create')
