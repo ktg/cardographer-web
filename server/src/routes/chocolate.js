@@ -240,6 +240,17 @@ router.post('/gift/:orderid/updateMessage', async (req, res) => {
 	}
 });
 
+router.get('/gift/:orderid/delete/LEsWz26vmvSTwBXr9YMS', upload.single('file'), async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
+	if (order) {
+		await req.app.locals.chocDb.collection('gift').deleteOne({"order": orderid})
+		res.status(200).send("success");
+	} else {
+		res.status(404).send();
+	}
+});
+
 router.post('/gift/:orderid/addFile', upload.single('file'), async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
