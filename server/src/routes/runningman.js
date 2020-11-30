@@ -1,25 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const domino = require('domino');
-const fetch = require('node-fetch');
-const AbortController = require('abort-controller');
-
-async function fetchTimeout(url, time) {
-	const controller = new AbortController();
-	const timeout = setTimeout(() => {
-		controller.abort();
-	}, time);
-
-	try {
-		return await fetch(url, {signal: controller.signal});
-	} catch (error) {
-		if (error.name === 'AbortError') {
-			console.log('request was aborted');
-		}
-	} finally {
-		clearTimeout(timeout);
-	}
-}
+const fetch = require('./fetchTimeout');
 
 const escapeHTML = str => str.replace(/[&<>'"]/g,
 	tag => ({
@@ -31,7 +13,7 @@ const escapeHTML = str => str.replace(/[&<>'"]/g,
 	}[tag]));
 
 router.get('/rss', async (req, res) => {
-	const response = await fetchTimeout('https://www.myrunningman.com/episodes/newest', 10000);
+	const response = await fetch('https://www.myrunningman.com/episodes/newest', 10000);
 	const html = await response.text();
 	const doc = domino.createWindow(html).document;
 	const links = doc.getElementsByTagName('a');

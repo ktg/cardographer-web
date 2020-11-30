@@ -9,9 +9,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const {getMetadata} = require('page-metadata-parser');
 const domino = require('domino');
-const fetch = require('node-fetch');
-const AbortController = require('abort-controller');
-
+const fetch = require('./fetchTimeout');
 
 const global_salt = "-hybrid-choco-gifting-";
 
@@ -261,23 +259,6 @@ router.post('/gift/:orderid/addFile', upload.single('file'), async (req, res) =>
 	}
 });
 
-async function fetchTimeout(url, time) {
-	const controller = new AbortController();
-	const timeout = setTimeout(() => {
-		controller.abort();
-	}, time);
-
-	try {
-		return await fetch(url, {signal: controller.signal});
-	} catch (error) {
-		if (error.name === 'AbortError') {
-			console.log('request was aborted');
-		}
-	} finally {
-		clearTimeout(timeout);
-	}
-}
-
 router.post('/gift/:orderid/addLink', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
@@ -312,7 +293,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 			res.redirect('edit');
 		} else {
 			try {
-				const response = await fetchTimeout(uri, 3000);
+				const response = await fetch(uri, 3000);
 				const contentType = response.headers.get("content-type");
 				if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
 					order.content[index] = {
