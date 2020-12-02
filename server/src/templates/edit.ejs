@@ -62,7 +62,7 @@
                     <% } else { %>
                         <% itemType = "Link" %>
                         <form action="editLink" method="post"
-                              style="display: flex; flex-direction: column; padding: 16px; width: 100%; box-sizing: border-box">
+                              style="display: flex; flex-direction: column; padding: 16px; width: 100%; box-sizing: border-box" novalidate>
                             <div style="font-size: smaller;padding-bottom: 8px">Adding a link to an picture, video or
                                 audio file will embed that file into your gift.
                                 For any other link a summary of the page being linked to will be displayed, if
@@ -76,7 +76,7 @@
                                    style="align-self: center">
                             <script>
 								function isValidUrl(string) {
-									const res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/g);
+									const res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/g);
 									return (res !== null)
 								}
 
@@ -89,9 +89,6 @@
 									linkbut.disabled = !isValidUrl(linkput.value);
 								});
 								linkput.addEventListener('blur', () => {
-									if (!linkput.value.startsWith('https:') && !linkput.value.startsWith('http:')) {
-										linkput.value = 'http://' + linkput.value;
-									}
 									linkbut.disabled = true;
 									if (isValidUrl(linkput.value)) {
 										linkbut.disabled = false;

@@ -304,6 +304,11 @@ router.post('/gift/:orderid/addLink', async (req, res) => {
 	}
 });
 
+function isValidUrl(string) {
+	const res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/g);
+	return (res !== null)
+}
+
 const youtubeMatcher = new RegExp('^(?:.+?)?(?:\\/v\\/|watch\\/|\\?v=|&v=|youtu\\.be\\/|\\/v=|^youtu\\.be\\/|watch%3Fv%3D)([a-zA-Z0-9_-]{11})+$', 'i');
 router.post('/gift/:orderid/editLink', async (req, res) => {
 	const orderid = req.params['orderid'];
@@ -322,32 +327,40 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 			res.redirect('edit');
 		} else {
 			try {
-				const response = await fetch(uri, 3000);
-				const contentType = response.headers.get("content-type");
-				if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
-					order.content[index] = {
-						"uri": uri,
-						"mimetype": contentType,
-					};
-					log(req, orderid, "Item " + index + " edited link " + contentType + ": " + uri);
-				} else {
-					const html = await response.text();
-					const doc = domino.createWindow(html).document;
-					const metadata = getMetadata(doc, uri);
-					console.log(metadata);
-					order.content[index] = {
-						"uri": uri,
-						"mimetype": 'text/x-uri',
-						"title": metadata.title,
-						"description": metadata.description,
-						"icon": metadata.icon,
-						"image": metadata.image,
-						"provider": metadata.provider
-					};
+				if(!isValidUrl(uri) && !uri.startsWith('https:') && !uri.startsWith('http:')) {
+					uri = 'http://' + uri;
 				}
-				log(req, orderid, "Item " + index + " edited link " + uri);
-				await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
-				res.redirect('edit');
+
+				if(isValidUrl(uri)) {
+					const response = await fetch(uri, 3000);
+					const contentType = response.headers.get("content-type");
+					if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
+						order.content[index] = {
+							"uri": uri,
+							"mimetype": contentType,
+						};
+						log(req, orderid, "Item " + index + " edited link " + contentType + ": " + uri);
+					} else {
+						const html = await response.text();
+						const doc = domino.createWindow(html).document;
+						const metadata = getMetadata(doc, uri);
+						console.log(metadata);
+						order.content[index] = {
+							"uri": uri,
+							"mimetype": 'text/x-uri',
+							"title": metadata.title,
+							"description": metadata.description,
+							"icon": metadata.icon,
+							"image": metadata.image,
+							"provider": metadata.provider
+						};
+					}
+					log(req, orderid, "Item " + index + " edited link " + uri);
+					await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
+					res.redirect('edit');
+				} else {
+					res.redirect('edit');
+				}
 			} catch (e) {
 				order.content[index] = {
 					"uri": uri,
