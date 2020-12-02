@@ -328,6 +328,7 @@ router.post('/gift/:orderid/updatePass', async (req, res) => {
 			order.session = '';
 			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 			log(req, orderid, "Password Updated");
+			res.redirect('../../');
 		}
 	} else {
 		res.status(404).send("Not Found");
