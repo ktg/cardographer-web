@@ -211,7 +211,11 @@ label {
 	padding-top: 8px;
 }
 
-button, input[type=submit] {
+li {
+	font-weight: normal;
+}
+
+button, input[type=submit], a.btn {
 	font: italic normal normal 17px/21px georgia, palatino, "book antiqua", "palatino linotype", serif;
 	color: #FFF;
 	background-color: #000;
@@ -220,4 +224,5 @@ button, input[type=submit] {
 	border-radius: 0;
 	padding: 6px 24px;
 	margin: 6px 8px;
+	text-decoration: none;
 }
