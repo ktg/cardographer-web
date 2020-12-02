@@ -98,9 +98,11 @@ router.post('/login', async (req, res) => {
 			res.cookie('session', order.session);
 			res.redirect('gift/' + orderid + '/edit');
 		} else {
+			log(req, orderid, "Failed login");
 			res.render('intro.ejs', {order: orderid, login: true, error: 'Order and password do not match'});
 		}
 	} else {
+		log(req, orderid, "Failed login");
 		res.render('intro.ejs', {order: orderid, login: true, error: 'Order and password do not match'});
 	}
 });
@@ -318,7 +320,7 @@ router.post('/gift/:orderid/updatePass', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order) {
-		if(req.body.key !== 'cwrLZiQAix2hxlu3K8Pt') {
+		if (req.body.key !== 'cwrLZiQAix2hxlu3K8Pt') {
 			res.redirect('../../');
 		} else {
 			const salt = namegen();
