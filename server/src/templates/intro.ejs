@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title></title>
+    <title>Studio Chocolate Hybrid Gifting</title>
     <link rel="stylesheet" href="css/chocolate.css">
     <link rel="icon" type="image/webp" href="images/choclogo.webp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<img src="images/choclogo.webp" class="logo">
-<div style="max-width: 400px; padding-top: 16px;">Welcome. Make your gift into a hybrid gift by adding some personal
-    digital content to it. Enter your order number and a password to get started, or
-    <a href="#" id="loginLink">login</a> to edit an existing gift.
+<img src="images/choclogo.webp" class="logo" alt="Studio Chocolate Logo">
+<div style="max-width: 500px; padding-top: 16px;">
+    What is a hybrid gift, you say?
+    <hr/>
+    It's a way to create a whole experience around eating those delicious bonbons when you can't be with your gift
+    receiver in person.
+    <hr/>
+    Add music, video, audio, links, an extra little message... whatever you think will set the right tone.
+    <hr/>
+    You don't need to register with your name or email address. Just enter your invoice number (on your confirmation
+    page and confirmation email) and create a password so that you can come back and add to your gift later if you want
+    to.
 </div>
 
-<form id="create" action="create" method=   "post" <%= login === true ? 'style=display:none' : '' %>>
+<form id="create" action="create" method="post" <%= login === true ? 'style=display:none' : '' %>>
     <div class="list">
-        <label for="createOrder">Order Number</label>
+        <label for="createOrder">Invoice Number</label>
         <input id="createOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
                value="<%= order %>">
         <label for="createPass">Password</label>
@@ -23,13 +31,13 @@
         <label for="createConfirm">Confirm Password</label>
         <input id="createConfirm" class="field" type="password" name="confirm" minlength="6" required>
         <div id="createError" class="error"><%= login !== true ? error : '' %></div>
-        <input id="createSubmit" type="submit" value="Create" class="field" disabled>
+        <input id="createSubmit" type="submit" value="Get Started" class="field" disabled>
     </div>
 </form>
 
 <form id="login" action="login" method="post" <%= login !== true ? 'style=display:none' : '' %>>
     <div class="list">
-        <label for="loginOrder">Order Number</label>
+        <label for="loginOrder">Invoice Number</label>
         <input id="loginOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
                value="<%= order %>">
         <label for="loginPass">Password</label>
@@ -38,6 +46,8 @@
         <input id="loginSubmit" type="submit" value="Login" class="field" disabled>
     </div>
 </form>
+
+<a href="#" id="loginLink">Login to an Existing Gift</a>
 
 <a href="faq.html" style="padding: 8px 16px; font-size: x-small">FAQs</a>
 
@@ -82,13 +92,15 @@
 	});
 
 	document.getElementById('loginLink').addEventListener('click', () => {
-		if(createForm.style.display === 'none') {
+		if (createForm.style.display === 'none') {
+			document.getElementById('loginLink').innerText = 'Login to an Existing Gift';
 			document.getElementById('create').style.display = 'block';
 			document.getElementById('login').style.display = 'none';
 		} else {
+			document.getElementById('loginLink').innerText = 'Get Started with a New Gift';
 			document.getElementById('create').style.display = 'none';
 			document.getElementById('login').style.display = 'block';
-        }
+		}
 	});
 
 	const createPass = document.getElementById('createPass');

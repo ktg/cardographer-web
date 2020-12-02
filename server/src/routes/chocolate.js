@@ -162,7 +162,22 @@ router.get('/gift/:orderid', async (req, res) => {
 				}
 			})
 		}
+		order.preview = false;
 		log(req, orderid, "Viewed Gift");
+		res.render('view.ejs', order)
+	} else {
+		res.status(404).send("Not Found");
+	}
+});
+
+router.get('/gift/:orderid/preview', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
+	if (order) {
+		order.prefix = '../'
+		order.preview = true;
+		console.log(order);
+		log(req, orderid, "Previewed Gift");
 		res.render('view.ejs', order)
 	} else {
 		res.status(404).send("Not Found");
@@ -216,7 +231,8 @@ router.post('/gift/:orderid/addMessage', async (req, res) => {
 		const index = req.body.item;
 		order.content[index] = {
 			uri: "",
-			mimetype: "text/plain"
+			mimetype: "text/plain",
+			editing: true
 		};
 		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 		log(req, orderid, "Item " + index + " added message");
@@ -232,6 +248,7 @@ router.post('/gift/:orderid/updateMessage', async (req, res) => {
 	if (order) {
 		const itemIndex = req.body.item;
 		order.content[itemIndex].uri = req.body.content;
+		delete order.content[itemIndex].editing
 		console.log(order);
 		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 		log(req, orderid, "Item " + itemIndex + " edited message");

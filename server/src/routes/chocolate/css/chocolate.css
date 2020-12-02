@@ -33,12 +33,16 @@ body {
 	margin: 2px;
 }
 
+hr {
+	border: 0;
+}
+
 .items {
 	display: flex;
 	flex-wrap: wrap;
 	max-width: 800px;
 	justify-content: center;
-	padding: 8px;
+	padding: 16px 0;
 }
 
 .quest {
@@ -54,6 +58,7 @@ body {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	position: relative;
 }
 
 .message {
@@ -92,6 +97,29 @@ body {
 input[type=submit].field {
 	padding-top: 8px;
 	background-color: #fab89d;
+}
+
+input[type=image] {
+	opacity: 0.5;
+	background-color: #FFF3;
+	padding: 8px;
+	border: 0;
+}
+
+input[type=image]:hover {
+	opacity: 1;
+}
+
+.helpButton {
+	position: absolute;
+	top: 0;
+	right: 40px;
+}
+
+.clearButton {
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 input[type=submit]:disabled.field {

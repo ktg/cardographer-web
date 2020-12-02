@@ -1,36 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title></title>
+    <title>Studio Chocolate Hybrid Gift</title>
     <link rel="stylesheet" href="../../css/chocolate.css">
     <link rel="icon" type="image/webp" href="../../images/choclogo.webp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<img src="../../images/choclogo.webp" class="logo">
+<img src="../../images/choclogo.webp" class="logo" alt="Studio Chocolate Logo">
+<div style="max-width: 400px; padding-top: 16px;">
+    You can fill each box with one item: 'Media' (an image, audio file, or video), a link, or a written message. Media
+    files can only be 10MB, but you can always upload longer files to YouTube or any other service and add the link.
+</div>
 <div class="items">
     <% content.forEach((contentItem, index) => { %>
         <div class="item"
              style="background-color: <%= index === 0 || index === 3 ? '#ffebe3' : index === 1 ? '#fab89d' : '#d1c8e1' %>">
+            <% let itemType = ""; %>
             <% if(contentItem && contentItem.mimetype) { %>
                 <% if(contentItem.mimetype.startsWith("image/")) { %>
+                    <% itemType = "Image" %>
                     <img src="<%= contentItem.uri %>"/>
                 <% } else if(contentItem.mimetype === 'video/youtube') { %>
+                    <% itemType = "Youtube Video" %>
                     <iframe src="https://www.youtube.com/embed/<%= contentItem.uri %>">
                     </iframe>
                 <% } else if(contentItem.mimetype.startsWith("video/")) { %>
+                    <% itemType = "Video" %>
                     <video src="<%= contentItem.uri %>" controls></video>
                 <% } else if(contentItem.mimetype.startsWith("audio/")) { %>
+                    <% itemType = "Audio" %>
                     <audio src="<%= contentItem.uri %>" controls></audio>
                 <% } else if(contentItem.mimetype === 'text/plain') { %>
-                    <form action="updateMessage" method="post" class="messageEdit">
-                        <textarea name="content" rows="10"><%= contentItem.uri %></textarea>
-                        <input type="hidden" name="item" value="<%= index %>">
-                        <div style="display: flex;">
-                            <input type="submit" value="Save Message">
-                        </div>
-                    </form>
+                    <% itemType = "Message" %>
+                    <% if(contentItem.editing) { %>
+                        <form action="updateMessage" method="post" class="messageEdit">
+                            <textarea name="content" rows="10"><%= contentItem.uri %></textarea>
+                            <input type="hidden" name="item" value="<%= index %>">
+                            <div style="display: flex;">
+                                <input type="submit" value="Save Message">
+                            </div>
+                        </form>
+                    <% } else { %>
+                        <div class="message"><%= contentItem.uri %></div>
+                    <% } %>
                 <% } else if(contentItem.mimetype === 'text/x-uri') { %>
+                    <% itemType = "Link" %>
                     <% if(contentItem.uri) { %>
                         <a href="<%= contentItem.uri %>" target="_blank" class="link">
                             <% if(contentItem.image) { %>
@@ -45,27 +60,36 @@
                             <% } %>
                         </a>
                     <% } else { %>
-                        <form action="editLink" method="post">
+                        <% itemType = "Link" %>
+                        <form action="editLink" method="post"
+                              style="display: flex; flex-direction: column; padding: 16px; width: 100%; box-sizing: border-box">
+                            <div style="font-size: smaller;padding-bottom: 8px">Adding a link to an picture, video or
+                                audio file will embed that file into your gift.
+                                For any other link a summary of the page being linked to will be displayed, if
+                                possible.
+                            </div>
                             <input id="linkput" type="url" name="link" placeholder="URL" value="<% contentItem.uri %>">
                             <input type="hidden" name="item" value="<%= index %>">
-                            <input type="submit" value="Link Content">
+                            <input type="submit" value="Add This Link" style="align-self: center">
                         </form>
                     <% } %>
                 <% } %>
                 <form action="deleteItem" method="post">
                     <input type="hidden" name="item" value="<%= index %>">
-                    <input type="submit" value="Reset Item">
+                    <input type="image" src="../../images/clear-24px.svg" title="Remove <%= itemType %>"
+                           class="clearButton">
+                    <!--<input type="submit" value="Reset Item">-->
                 </form>
             <% } else { %>
                 <form action="addMessage" method="post">
-                    <input type="submit" value="Add Message"/>
+                    <input type="submit" value="Add Message" title="Write a Personalized Message"/>
                     <input type="hidden" name="item" value="<%= index %>">
                 </form>
                 <form action="addLink" method="post">
-                    <input type="submit" value="Add Link"/>
+                    <input type="submit" value="Link to Content"/>
                     <input type="hidden" name="item" value="<%= index %>">
                 </form>
-                <button onclick="document.getElementById('uploadInput<%= index %>').click()">Upload Content</button>
+                <button onclick="document.getElementById('uploadInput<%= index %>').click()">Upload Media</button>
                 <form action="addFile" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="item" value="<%= index %>">
                     <input id="uploadInput<%= index %>" type="file" name="file" accept="image/*, video/*, audio/*"
@@ -75,25 +99,41 @@
             <% } %>
         </div>
     <% }); %>
-    <div style="display: flex; flex: 1 1 300px">
-        <img src="../../images/uon.svg" style="width: 150px; align-self: center; padding-top: 12px"/>
-        <!--<div style="font-size: smaller; padding-left: 12px; padding-top: 12px">Developed by the University of Nottingham. To help our research,
-            please consider taking this short questionnaire.
-        </div>-->
-        <a href="../../faq.html" style="padding: 16px; font-size: smaller; align-self: center">FAQs</a>
+    <div style="font-size: smaller; padding-top: 16px">
+        Add the content types in any combination you like. 4 photos, 3 links and a message, or just one or two pieces
+        of content – it's your &lsquo;gift card&rsquo;, so you get to create what you like.
+        <hr/>
+        All your receiver has to do is scan the QR code with their bonbons that links to what you&rsquo;re making. You
+        might
+        want to arrange a special time for them to &lsquo;open&rsquo; their hybrid gift – Studio's amazing bonbons plus
+        your
+        personal hybrid gift experience.
+        <hr/>
+        You can come back to your gift at any time. Add more content or change what you have, even after the gift has
+        been &lsquo;opened&rsquo;.
+        <hr/>
+        We would love to hear your feedback! Please click to <a
+                href="https://nottingham.onlinesurveys.ac.uk/studio-gift">send us your thoughts</a>
+        anonymously or submit your email to do a quick phone interview with a University of Nottingham researcher.
+        You&rsquo;ll receive £10 off your next Studio Chocolate order by 30 June 2021 in exchange for your time being
+        interviewed.
     </div>
-    <a href="." target="_blank" style="flex: 1 1 300px; padding: 24px; text-align: end">Preview</a>
+    <div style="display: flex; width: 100%; padding-top: 16px; align-items: center">
+        <img src="../../images/uon.svg" style="width: 150px"/>
+        <a href="../../faq.html" style="padding: 16px; font-size: smaller">FAQs</a>
+        <a href="preview" style="flex: 1 1 300px; padding: 24px; text-align: end">Preview</a>
+    </div>
 </div>
 <script defer>
 	const maxFileSize = 10000000;
 
-	function humanFileSize(bytes, si = true, dp = 1) {
-		const thresh = si ? 1000 : 1024;
+	function humanFileSize(bytes, dp = 1) {
+		const thresh = 1000;
 		if (Math.abs(bytes) < thresh) {
 			return bytes + ' B';
 		}
 
-		const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+		const units = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 		let u = -1;
 		const r = 10 ** dp;
 
@@ -113,7 +153,9 @@
 			if (size < maxFileSize) {
 				event.target.form.submit();
 			} else {
-				document.getElementById('uploadError').innerText = 'This server only allows uploads up to ' + humanFileSize(maxFileSize) + '. ' + event.target.files[0].name + ' is ' + humanFileSize(size) + '. If you are unable to make it any smaller, you can upload the file elsewhere and link to it.';
+				document.getElementById('uploadError').innerText = 'This server only allows uploads up to ' +
+					humanFileSize(maxFileSize, 0) + '. ' + event.target.files[0].name + ' is ' + humanFileSize(size) +
+					'. If you are unable to make it any smaller, you can upload the file elsewhere and link to it.';
 			}
 		})
 	});
