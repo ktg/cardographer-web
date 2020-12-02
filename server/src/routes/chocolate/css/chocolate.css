@@ -122,7 +122,7 @@ input[type=image]:hover {
 	right: 0;
 }
 
-input[type=submit]:disabled.field {
+input[type=submit]:disabled {
 	color: #CCC;
 	background-color: #999;
 	opacity: 0.5;

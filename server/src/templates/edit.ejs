@@ -68,9 +68,39 @@
                                 For any other link a summary of the page being linked to will be displayed, if
                                 possible.
                             </div>
-                            <input id="linkput" type="url" name="link" placeholder="URL" value="<% contentItem.uri %>">
+                            <input id="linkput<%= index %>" type="url" name="link" placeholder="URL"
+                                   value="<% contentItem.uri %>">
+                            <div id="linkerr<%= index %>" class="error">Not a Valid URL</div>
                             <input type="hidden" name="item" value="<%= index %>">
-                            <input type="submit" value="Add This Link" style="align-self: center">
+                            <input id="linkbut<%= index %>" type="submit" value="Add This Link" disabled
+                                   style="align-self: center">
+                            <script>
+								function isValidUrl(string) {
+									const res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/g);
+									return (res !== null)
+								}
+
+								const linkput = document.getElementById('linkput<%= index %>');
+								const linkbut = document.getElementById('linkbut<%= index %>');
+								const linkerr = document.getElementById('linkerr<%= index %>');
+								linkerr.style.display = 'none';
+								linkput.addEventListener('input', () => {
+									linkerr.style.display = 'none';
+									linkbut.disabled = !isValidUrl(linkput.value);
+								});
+								linkput.addEventListener('blur', () => {
+									if (!linkput.value.startsWith('https:') && !linkput.value.startsWith('http:')) {
+										linkput.value = 'http://' + linkput.value;
+									}
+									linkbut.disabled = true;
+									if (isValidUrl(linkput.value)) {
+										linkbut.disabled = false;
+									} else {
+										linkbut.disabled = true;
+										linkerr.style.display = 'block';
+									}
+								})
+                            </script>
                         </form>
                     <% } %>
                 <% } %>
@@ -103,8 +133,10 @@
         Add the content types in any combination you like. 4 photos, 3 links and a message, or just one or two pieces
         of content – it's your &lsquo;gift card&rsquo;, so you get to create what you like.
         <hr/>
-        All your receiver has to do is scan the custom QR code that will arrive with their bonbons. The QR code links directly to what you’re making. You
-        might want to arrange a special time for them to &lsquo;open&rsquo; their hybrid gift – Studio's amazing bonbons plus
+        All your receiver has to do is scan the custom QR code that will arrive with their bonbons. The QR code links
+        directly to what you’re making. You
+        might want to arrange a special time for them to &lsquo;open&rsquo; their hybrid gift – Studio's amazing bonbons
+        plus
         your personal hybrid gift experience.
         <hr/>
         You can come back to your gift at any time. Add more content or change what you have, even after the gift has
@@ -120,6 +152,7 @@
         <img src="../../images/uon.svg" style="width: 150px"/>
         <a href="../../faq.html" style="padding: 16px; font-size: smaller">FAQs</a>
         <a href="preview" style="flex: 1 1 300px; padding: 24px; text-align: end">Preview</a>
+        <a href="." style="padding: 24px; text-align: end">Submit</a>
     </div>
 </div>
 <script defer>
