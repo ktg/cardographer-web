@@ -174,11 +174,16 @@ router.get('/gift/:orderid/preview', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order) {
-		order.prefix = '../'
-		order.preview = true;
-		console.log(order);
-		log(req, orderid, "Previewed Gift");
-		res.render('view.ejs', order)
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+			order.prefix = '../'
+			order.preview = true;
+			console.log(order);
+			log(req, orderid, "Previewed Gift");
+			res.render('view.ejs', order)
+		}
 	} else {
 		res.status(404).send("Not Found");
 	}
@@ -207,18 +212,23 @@ router.post('/gift/:orderid/deleteItem', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
 	if (order) {
-		const removeIndex = req.body.item;
-		let uri = order.content[removeIndex].uri;
-		if ((typeof uri === 'string' || uri instanceof String) && uri.startsWith(uploadUri)) {
-			uri = uri.replace(uploadUri, uploadDir)
-			if (fs.existsSync(uri)) {
-				fs.unlinkSync(uri);
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+			const removeIndex = req.body.item;
+			let uri = order.content[removeIndex].uri;
+			if ((typeof uri === 'string' || uri instanceof String) && uri.startsWith(uploadUri)) {
+				uri = uri.replace(uploadUri, uploadDir)
+				if (fs.existsSync(uri)) {
+					fs.unlinkSync(uri);
+				}
 			}
+			order.content[removeIndex] = {};
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
+			log(req, orderid, "Item " + removeIndex + " removed");
+			res.redirect('edit');
 		}
-		order.content[removeIndex] = {};
-		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
-		log(req, orderid, "Item " + removeIndex + " removed");
-		res.redirect('edit');
 	} else {
 		res.status(404).send();
 	}
@@ -228,15 +238,21 @@ router.post('/gift/:orderid/addMessage', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order) {
-		const index = req.body.item;
-		order.content[index] = {
-			uri: "",
-			mimetype: "text/plain",
-			editing: true
-		};
-		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + index + " added message");
-		res.redirect('edit');
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+
+			const index = req.body.item;
+			order.content[index] = {
+				uri: "",
+				mimetype: "text/plain",
+				editing: true
+			};
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			log(req, orderid, "Item " + index + " added message");
+			res.redirect('edit');
+		}
 	} else {
 		res.status(404).send("Not Found");
 	}
@@ -246,13 +262,18 @@ router.post('/gift/:orderid/updateMessage', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
 	if (order) {
-		const itemIndex = req.body.item;
-		order.content[itemIndex].uri = req.body.content;
-		delete order.content[itemIndex].editing
-		console.log(order);
-		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + itemIndex + " edited message");
-		res.redirect('edit');
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+			const itemIndex = req.body.item;
+			order.content[itemIndex].uri = req.body.content;
+			delete order.content[itemIndex].editing
+			console.log(order);
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			log(req, orderid, "Item " + itemIndex + " edited message");
+			res.redirect('edit');
+		}
 	} else {
 		res.status(404).send();
 	}
@@ -273,18 +294,43 @@ router.post('/gift/:orderid/addFile', upload.single('file'), async (req, res) =>
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order) {
-		const index = req.body.item;
-		let uri = req.file.path;
-		uri = uri.replace(uploadDir, uploadUri);
-		order.content[index] = {
-			"uri": uri,
-			"mimetype": req.file.mimetype
-		};
-		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + index + " added upload " + req.file.mimetype);
-		res.redirect('edit');
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+			const index = req.body.item;
+			let uri = req.file.path;
+			uri = uri.replace(uploadDir, uploadUri);
+			order.content[index] = {
+				"uri": uri,
+				"mimetype": req.file.mimetype
+			};
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			log(req, orderid, "Item " + index + " added upload " + req.file.mimetype);
+			res.redirect('edit');
+		}
 	} else {
 		res.status(404).send();
+	}
+});
+
+router.post('/gift/:orderid/updatePass', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
+	if (order) {
+		if(req.body.key !== 'cwrLZiQAix2hxlu3K8Pt') {
+			res.redirect('../../');
+		} else {
+			const salt = namegen();
+			const password = req.body.password + global_salt + salt;
+			order.hash = crypto.createHash('sha256').update(password).digest('hex');
+			order.salt = salt;
+			order.session = '';
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			log(req, orderid, "Password Updated");
+		}
+	} else {
+		res.status(404).send("Not Found");
 	}
 });
 
@@ -292,13 +338,18 @@ router.post('/gift/:orderid/addLink', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order) {
-		const index = req.body.item;
-		order.content[index] = {
-			mimetype: "text/x-uri"
-		};
-		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-		log(req, orderid, "Item " + index + " added link");
-		res.redirect('edit');
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+			const index = req.body.item;
+			order.content[index] = {
+				mimetype: "text/x-uri"
+			};
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			log(req, orderid, "Item " + index + " added link");
+			res.redirect('edit');
+		}
 	} else {
 		res.status(404).send("Not Found");
 	}
@@ -314,61 +365,66 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order != null) {
-		const index = req.body.item;
-		let uri = req.body.link.trim();
-		const match = uri.match(youtubeMatcher);
-		if (match) {
-			order.content[index] = {
-				"uri": match[1],
-				"mimetype": 'video/youtube'
-			};
-			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
-			log(req, orderid, "Item " + index + " edited link youtube: " + uri);
-			res.redirect('edit');
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
 		} else {
-			try {
-				if(!isValidUrl(uri) && !uri.startsWith('https:') && !uri.startsWith('http:')) {
-					uri = 'http://' + uri;
-				}
-
-				if(isValidUrl(uri)) {
-					const response = await fetch(uri, 3000);
-					const contentType = response.headers.get("content-type");
-					if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
-						order.content[index] = {
-							"uri": uri,
-							"mimetype": contentType,
-						};
-						log(req, orderid, "Item " + index + " edited link " + contentType + ": " + uri);
-					} else {
-						const html = await response.text();
-						const doc = domino.createWindow(html).document;
-						const metadata = getMetadata(doc, uri);
-						console.log(metadata);
-						order.content[index] = {
-							"uri": uri,
-							"mimetype": 'text/x-uri',
-							"title": metadata.title,
-							"description": metadata.description,
-							"icon": metadata.icon,
-							"image": metadata.image,
-							"provider": metadata.provider
-						};
+			const index = req.body.item;
+			let uri = req.body.link.trim();
+			const match = uri.match(youtubeMatcher);
+			if (match) {
+				order.content[index] = {
+					"uri": match[1],
+					"mimetype": 'video/youtube'
+				};
+				await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
+				log(req, orderid, "Item " + index + " edited link youtube: " + uri);
+				res.redirect('edit');
+			} else {
+				try {
+					if (!isValidUrl(uri) && !uri.startsWith('https:') && !uri.startsWith('http:')) {
+						uri = 'http://' + uri;
 					}
+
+					if (isValidUrl(uri)) {
+						const response = await fetch(uri, 3000);
+						const contentType = response.headers.get("content-type");
+						if (contentType && (contentType.startsWith("video/") || contentType.startsWith("audio/") || contentType.startsWith("image/"))) {
+							order.content[index] = {
+								"uri": uri,
+								"mimetype": contentType,
+							};
+							log(req, orderid, "Item " + index + " edited link " + contentType + ": " + uri);
+						} else {
+							const html = await response.text();
+							const doc = domino.createWindow(html).document;
+							const metadata = getMetadata(doc, uri);
+							console.log(metadata);
+							order.content[index] = {
+								"uri": uri,
+								"mimetype": 'text/x-uri',
+								"title": metadata.title,
+								"description": metadata.description,
+								"icon": metadata.icon,
+								"image": metadata.image,
+								"provider": metadata.provider
+							};
+						}
+						log(req, orderid, "Item " + index + " edited link " + uri);
+						await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
+						res.redirect('edit');
+					} else {
+						res.redirect('edit');
+					}
+				} catch (e) {
+					order.content[index] = {
+						"uri": uri,
+						"mimetype": 'text/x-uri'
+					};
 					log(req, orderid, "Item " + index + " edited link " + uri);
 					await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
 					res.redirect('edit');
-				} else {
-					res.redirect('edit');
 				}
-			} catch (e) {
-				order.content[index] = {
-					"uri": uri,
-					"mimetype": 'text/x-uri'
-				};
-				log(req, orderid, "Item " + index + " edited link " + uri);
-				await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
-				res.redirect('edit');
 			}
 		}
 	} else {
