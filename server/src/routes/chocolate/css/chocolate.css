@@ -208,7 +208,7 @@ input:focus, input:focus:invalid {
 a.tab {
     margin-top: 32px;
     cursor: default;
-    color: white;
+    color: #333;
     background-color: #fab89d;
     padding: 4px 12px;
     display: block;
@@ -218,7 +218,7 @@ a.tab {
 a.tabSelect {
     cursor: pointer;
     color: #666;
-    background: linear-gradient(to top, #999 0, #CCC 3px, #CCC 100%);
+    background: linear-gradient(to top, #AAA 0, #CCC 2px, #CCC 100%);
 }
 
 a.tabSelect:hover {

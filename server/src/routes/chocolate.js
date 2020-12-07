@@ -144,6 +144,19 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 // 		});
 // });
 
+function updateMessages(req, order) {
+	const matcher = /^message(\d+)$/i;
+	Object.keys(req.body).forEach((key) => {
+		const match = key.match(matcher);
+		if (match) {
+			const index = parseInt(match[1]);
+			if (order.content[index].mimetype === 'text/plain') {
+				order.content[index].uri = req.body[key];
+			}
+		}
+	});
+}
+
 router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
 	const result = await req.app.locals.chocDb.collection('log').find().toArray()
 	res.json(result);
@@ -203,12 +216,32 @@ router.get('/gift/:orderid/edit', async (req, res) => {
 				order.content.push({});
 			}
 			order.content.length = 4;
+			order.saved = false;
 			res.render('edit.ejs', order);
 		}
 	} else {
 		res.status(404).send();
 	}
 });
+
+router.post('/gift/:orderid/edit', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
+	if (order) {
+		const session = req.cookies.session;
+		if (order.session !== session) {
+			res.redirect('../../');
+		} else {
+			updateMessages(req, order);
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			order.saved = true;
+			res.render('edit.ejs', order);
+		}
+	} else {
+		res.status(404).send();
+	}
+});
+
 
 router.post('/gift/:orderid/deleteItem', async (req, res) => {
 	const orderid = req.params['orderid'];
@@ -227,7 +260,8 @@ router.post('/gift/:orderid/deleteItem', async (req, res) => {
 				}
 			}
 			order.content[removeIndex] = {};
-			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
+			updateMessages(req, order);
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 			log(req, orderid, "Item " + removeIndex + " removed");
 			res.redirect('edit');
 		}
@@ -251,6 +285,7 @@ router.post('/gift/:orderid/addMessage', async (req, res) => {
 				mimetype: "text/plain",
 				editing: true
 			};
+			updateMessages(req, order);
 			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 			log(req, orderid, "Item " + index + " added message");
 			res.redirect('edit');
@@ -307,6 +342,7 @@ router.post('/gift/:orderid/addFile', upload.single('file'), async (req, res) =>
 				"uri": uri,
 				"mimetype": req.file.mimetype
 			};
+			updateMessages(req, order);
 			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 			log(req, orderid, "Item " + index + " added upload " + req.file.mimetype);
 			res.redirect('edit');
@@ -349,6 +385,7 @@ router.post('/gift/:orderid/addLink', async (req, res) => {
 			order.content[index] = {
 				mimetype: "text/x-uri"
 			};
+			updateMessages(req, order);
 			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
 			log(req, orderid, "Item " + index + " added link");
 			res.redirect('edit');
@@ -380,6 +417,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 					"uri": match[1],
 					"mimetype": 'video/youtube'
 				};
+				updateMessages(req, order);
 				await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
 				log(req, orderid, "Item " + index + " edited link youtube: " + uri);
 				res.redirect('edit');
@@ -414,6 +452,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 							};
 						}
 						log(req, orderid, "Item " + index + " edited link " + uri);
+						updateMessages(req, order);
 						await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
 						res.redirect('edit');
 					} else {
@@ -425,6 +464,7 @@ router.post('/gift/:orderid/editLink', async (req, res) => {
 						"mimetype": 'text/x-uri'
 					};
 					log(req, orderid, "Item " + index + " edited link " + uri);
+					updateMessages(req, order);
 					await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order)
 					res.redirect('edit');
 				}
