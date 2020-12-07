@@ -247,3 +247,8 @@ button, input[type=submit], a.btn {
     margin: 6px 8px;
     text-decoration: none;
 }
+
+#saveConfirm {
+    width: 100%;
+    text-align: center;
+}
