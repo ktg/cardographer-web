@@ -1,228 +1,249 @@
 @font-face {
-	font-family: "Futura-LT-W01-Book";
-	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/cf053eae-ba1f-44f3-940c-a34b68ccbbdf.eot?#iefix");
-	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/cf053eae-ba1f-44f3-940c-a34b68ccbbdf.eot?#iefix") format("eot"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/8bf38806-3423-4080-b38f-d08542f7e4ac.woff2") format("woff2"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/e2b9cbeb-fa8e-41cd-8a6a-46044b29ba52.woff") format("woff"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/c2a69697-4f06-4764-abd4-625031a84e31.ttf") format("truetype"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/dc423cc1-bf86-415c-bc7d-ad7dde416a34.svg#dc423cc1-bf86-415c-bc7d-ad7dde416a34") format("svg");
+    font-family: "Futura-LT-W01-Book";
+    src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/cf053eae-ba1f-44f3-940c-a34b68ccbbdf.eot?#iefix");
+    src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/cf053eae-ba1f-44f3-940c-a34b68ccbbdf.eot?#iefix") format("eot"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/8bf38806-3423-4080-b38f-d08542f7e4ac.woff2") format("woff2"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/e2b9cbeb-fa8e-41cd-8a6a-46044b29ba52.woff") format("woff"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/c2a69697-4f06-4764-abd4-625031a84e31.ttf") format("truetype"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/dc423cc1-bf86-415c-bc7d-ad7dde416a34.svg#dc423cc1-bf86-415c-bc7d-ad7dde416a34") format("svg");
 }
 
 @font-face {
-	font-family: "Lulo-Clean-W01-One-Bold";
-	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/0163ac22-50a7-406e-aa64-c62ee6fbf3d7.eot?#iefix");
-	src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/0163ac22-50a7-406e-aa64-c62ee6fbf3d7.eot?#iefix") format("eot"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/aee74cb3-c913-4b54-9722-6001c92325f2.woff2") format("woff2"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/80de9d5d-ab5f-40ce-911b-104e51e93d7c.woff") format("woff"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/1b46b05b-cfdd-4d82-8c2f-5c6cfba1fe60.ttf") format("truetype"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/be340f0b-a2d4-41df-acb1-4dc124330a88.svg#be340f0b-a2d4-41df-acb1-4dc124330a88") format("svg");
+    font-family: "Lulo-Clean-W01-One-Bold";
+    src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/0163ac22-50a7-406e-aa64-c62ee6fbf3d7.eot?#iefix");
+    src: url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/0163ac22-50a7-406e-aa64-c62ee6fbf3d7.eot?#iefix") format("eot"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/aee74cb3-c913-4b54-9722-6001c92325f2.woff2") format("woff2"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/80de9d5d-ab5f-40ce-911b-104e51e93d7c.woff") format("woff"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/1b46b05b-cfdd-4d82-8c2f-5c6cfba1fe60.ttf") format("truetype"), url("//static.parastorage.com/services/third-party/fonts/user-site-fonts/fonts/be340f0b-a2d4-41df-acb1-4dc124330a88.svg#be340f0b-a2d4-41df-acb1-4dc124330a88") format("svg");
 }
 
 body {
-	margin: 16px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	font-family: futura-lt-w01-book, sans-serif;
+    margin: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: futura-lt-w01-book, sans-serif;
 }
 
 .logo {
-	width: 250px;
+    width: 250px;
 }
 
 .list {
-	display: flex;
-	flex-direction: column;
-	padding: 8px;
-	width: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    width: 200px;
 }
 
 .list > * {
-	margin: 2px;
+    margin: 2px;
 }
 
 hr {
-	border: 0;
+    border: 0;
 }
 
 .items {
-	display: flex;
-	flex-wrap: wrap;
-	max-width: 800px;
-	justify-content: center;
-	padding: 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    justify-content: center;
+    padding: 16px 0;
 }
 
 .quest {
-	font-weight: bold;
-	margin-top: 16px;
+    font-weight: bold;
+    margin-top: 16px;
 }
 
 .item {
-	flex: 1 1 300px;
-	min-height: 250px;
-	align-self: stretch;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	position: relative;
+    flex: 1 1 300px;
+    min-height: 250px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .message {
-	padding: 32px;
-	white-space: pre-line;
+    padding: 32px;
+    white-space: pre-line;
 }
 
 .contentButtons {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	max-width: 400px;
-	flex-direction: column;
-	align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 400px;
+    flex-direction: column;
+    align-items: center;
 }
 
 .link {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .linkProvider {
-	color: #666;
-	font-size: smaller;
-	padding: 0 32px;
+    color: #666;
+    font-size: smaller;
+    padding: 0 32px;
 }
 
 .linkTitle {
-	font-family: lulo-clean-w01-one-bold, sans-serif;
-	font-size: 15px;
-	letter-spacing: 0.15em;
-	font-weight: bold;
-	color: #000;
-	padding: 0 32px;
+    font-family: lulo-clean-w01-one-bold, sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.15em;
+    font-weight: bold;
+    color: #000;
+    padding: 0 32px;
 }
 
 input[type=submit].field {
-	padding-top: 8px;
-	background-color: #fab89d;
+    padding-top: 8px;
+    background-color: #fab89d;
 }
 
 input[type=image] {
-	opacity: 0.5;
-	background-color: #FFF3;
-	padding: 8px;
-	border: 0;
+    opacity: 0.5;
+    background-color: #FFF3;
+    padding: 8px;
+    border: 0;
 }
 
 input[type=image]:hover {
-	opacity: 1;
+    opacity: 1;
 }
 
 .helpButton {
-	position: absolute;
-	top: 0;
-	right: 40px;
+    position: absolute;
+    top: 0;
+    right: 40px;
 }
 
 .clearButton {
-	position: absolute;
-	top: 0;
-	right: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 input[type=submit]:disabled {
-	color: #CCC;
-	background-color: #999;
-	opacity: 0.5;
+    color: #CCC;
+    background-color: #999;
+    opacity: 0.5;
 }
 
 .linkDescription {
-	font-size: 15px;
-	color: #000;
-	padding: 0 32px;
+    font-size: 15px;
+    color: #000;
+    padding: 0 32px;
 }
 
 video, audio, img, iframe, textarea {
-	width: 100%;
-	max-width: 400px;
+    width: 100%;
+    max-width: 400px;
 }
 
 iframe {
-	border: 0;
-	height: 280px;
+    border: 0;
+    height: 280px;
 }
 
 .error {
-	color: maroon;
-	font-size: smaller;
+    color: maroon;
+    font-size: smaller;
 }
 
 input, textarea {
-	font-family: futura-lt-w01-book, sans-serif;
-	padding: 4px 8px;
-	border-radius: 0;
-	box-sizing: border-box;
-	border: 2px solid black;
+    font-family: futura-lt-w01-book, sans-serif;
+    padding: 4px 8px;
+    border-radius: 0;
+    box-sizing: border-box;
+    border: 2px solid black;
 }
 
 .messageEdit {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 textarea {
-	background-color: transparent;
-	width: 100%;
-	border-color: #0001;
-	font-size: medium;
-	align-self: stretch;
+    background-color: transparent;
+    width: 100%;
+    border-color: #0001;
+    font-size: medium;
+    align-self: stretch;
 }
 
 textarea:hover {
-	border-color: #0006;
+    border-color: #0006;
 }
 
 textarea:focus {
-	border-color: #000;
+    border-color: #000;
 }
 
 input:invalid {
-	border: 2px solid maroon;
+    border: 2px solid maroon;
 }
 
 input.field {
-	border: 0;
-	padding: 0;
-	border-bottom: 1px solid black;
+    border: 0;
+    padding: 0;
+    border-bottom: 1px solid black;
 }
 
 input.validate:invalid {
-	border-color: red;
-	border-width: 2px;
+    border-color: red;
+    border-width: 2px;
 }
 
 input.field:focus, input.field:focus:invalid {
-	border-width: 1px;
+    border-width: 1px;
 }
 
 input:focus, input:focus:invalid {
-	outline: none;
-	border-radius: 0;
-	border-color: #fab89d;
+    outline: none;
+    border-radius: 0;
+    border-color: #fab89d;
+}
+
+a.tab {
+    margin-top: 32px;
+    cursor: default;
+    color: white;
+    background-color: #fab89d;
+    padding: 4px 12px;
+    display: block;
+    text-decoration: none;
+}
+
+a.tabSelect {
+    cursor: pointer;
+    color: #666;
+    background: linear-gradient(to top, #999 0, #CCC 3px, #CCC 100%);
+}
+
+a.tabSelect:hover {
+    color: #333;
+    background: linear-gradient(to top, #DDD 0, #EEE 1px, #EEE 100%);
 }
 
 label {
-	color: #555;
-	font-size: smaller;
-	padding-top: 8px;
+    color: #555;
+    font-size: smaller;
+    padding-top: 8px;
 }
 
 li {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 button, input[type=submit], a.btn {
-	font: italic normal normal 17px/21px georgia, palatino, "book antiqua", "palatino linotype", serif;
-	color: #FFF;
-	background-color: #000;
-	border-color: #FFF;
-	border-width: 0;
-	border-radius: 0;
-	padding: 6px 24px;
-	margin: 6px 8px;
-	text-decoration: none;
+    font: italic normal normal 17px/21px georgia, palatino, "book antiqua", "palatino linotype", serif;
+    color: #FFF;
+    background-color: #000;
+    border-color: #FFF;
+    border-width: 0;
+    border-radius: 0;
+    padding: 6px 24px;
+    margin: 6px 8px;
+    text-decoration: none;
 }
