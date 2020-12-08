@@ -22,11 +22,11 @@
 </div>
 
 <div style="display: flex">
-    <a href="#" id="createTab" class="tab">Create a Gift</a>
-    <a href="#" id="loginTab" class="tab tabSelect">Login to an Existing Gift</a>
+    <a href="#" id="createTab" class="tab <%= login ? 'tabSelect' : '' %>">Create a Gift</a>
+    <a href="#" id="loginTab" class="tab <%= login ? '' : 'tabSelect' %>">Login to an Existing Gift</a>
 </div>
 
-<form id="create" action="create" method="post" <%= login === true ? 'style=display:none' : '' %>>
+<form id="create" action="create" method="post" <%= login ? 'style=display:none' : '' %>>
     <div class="list">
         <label for="createOrder">Order Number</label>
         <input id="createOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
@@ -35,19 +35,19 @@
         <input id="createPass" class="field" type="password" name="password" minlength="6" required>
         <label for="createConfirm">Confirm Password</label>
         <input id="createConfirm" class="field" type="password" name="confirm" minlength="6" required>
-        <div id="createError" class="error"><%= login !== true ? error : '' %></div>
+        <div id="createError" class="error"><%= login ? error : '' %></div>
         <input id="createSubmit" type="submit" value="Get Started" class="field" disabled>
     </div>
 </form>
 
-<form id="login" action="login" method="post" <%= login !== true ? 'style=display:none' : '' %>>
+<form id="login" action="login" method="post" <%= login ? '' : 'style=display:none' %>>
     <div class="list">
         <label for="loginOrder">Order Number</label>
         <input id="loginOrder" class="field" type="number" name="order" required min="1" pattern="[0-9]+"
                value="<%= order %>">
         <label for="loginPass">Password</label>
         <input id="loginPass" class="field" type="password" name="password" minlength="6" required>
-        <div id="loginError" class="error"><%= login === true ? error : '' %></div>
+        <div id="loginError" class="error"><%= login ? error : '' %></div>
         <input id="loginSubmit" type="submit" value="Login" class="field" disabled>
     </div>
 </form>
