@@ -62,6 +62,10 @@
 		const inputArray = Array.prototype.slice.call(inputs);
 		let valid = true;
 		let error = null;
+		if (!checkCookie()) {
+			error = 'Please enable cookies';
+			valid = false;
+		}
 		inputArray.forEach((item) => {
 			valid = valid && item.validity.valid;
 			if (item !== document.activeElement && item.classList.contains('validate')) {
@@ -127,6 +131,10 @@
 		const inputArray = Array.prototype.slice.call(inputs);
 		let valid = true;
 		let error = null;
+		if (!checkCookie()) {
+			error = 'Please enable cookies';
+			valid = false;
+		}
 		inputArray.forEach((item) => {
 			valid = valid && item.validity.valid;
 			if (item !== document.activeElement && item.classList.contains('validate')) {
@@ -158,6 +166,22 @@
 			validateLogin();
 		});
 	});
+
+	function checkCookie() {
+		// Quick test if browser has cookieEnabled host property
+		if (navigator.cookieEnabled) return true;
+		// Create cookie
+		document.cookie = "cookietest=1";
+		const ret = document.cookie.indexOf("cookietest=") != -1;
+		// Delete cookie
+		document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+		return ret;
+	}
+
+	if (!checkCookie()) {
+		document.getElementById('loginError').innerText = 'Please enable cookies';
+		document.getElementById('createError').innerText = 'Please enable cookies';
+	}
 </script>
 </body>
 </html>

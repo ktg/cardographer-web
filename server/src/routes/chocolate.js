@@ -56,7 +56,7 @@ router.post('/create', async (req, res) => {
 	}
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order != null) {
-		res.render('intro.ejs', {order: orderid, login: false, error: 'That order already exists'});
+		res.render('intro.ejs', {order: orderid, login: true, error: 'That order already exists. Login instead?'});
 	} else {
 		const salt = namegen();
 		const password = req.body.password + global_salt + salt;
