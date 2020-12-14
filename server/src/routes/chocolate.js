@@ -128,21 +128,21 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 	res.render('list.ejs', {orders: orders, page: page, nextPage: end < count, prevPage: page != 0})
 });
 
-router.get('/api/list/hKYy9ewNWi1YbgwqEhlk', (req, res) => {
-	req.app.locals.chocDb.collection('gift').find().toArray()
-		.then((result) => {
-			result.forEach((item) => {
-				delete item.hash;
-				delete item.salt;
-				delete item.session;
-			});
-			res.json(result);
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send(err);
-		});
-});
+// router.get('/api/list/hKYy9ewNWi1YbgwqEhlk', (req, res) => {
+// 	req.app.locals.chocDb.collection('gift').find().toArray()
+// 		.then((result) => {
+// 			result.forEach((item) => {
+// 				delete item.hash;
+// 				delete item.salt;
+// 				delete item.session;
+// 			});
+// 			res.json(result);
+// 		})
+// 		.catch((err) => {
+// 			console.log(err);
+// 			res.status(500).send(err);
+// 		});
+// });
 
 function updateMessages(req, order) {
 	const matcher = /^message(\d+)$/i;
