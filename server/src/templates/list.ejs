@@ -12,7 +12,12 @@
 <div class="list" style="width: 400px; align-items: center">
     <% orders.forEach((order) => { %>
         <div style="display: flex; align-items: center">
-            <div>Order&nbsp;<%= order.order %></div>
+            <div>
+                <div style="font-size: larger">Order&nbsp;<%= order.order %></div>
+                <% if(order.creation) { %>
+                    <div style="font-size: smaller; color: #333"><%= moment(order.creation).format('Do MMM YYYY, HH:mm '); %></div>
+                <% } %>
+            </div>
             <a href="../qrcode/<%= order.order %>"><img src="../qrcode/<%= order.order %>" style="width: 100px"></a>
         </div>
     <% }); %>

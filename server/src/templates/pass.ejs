@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Studio Chocolate Hybrid Gifting</title>
+    <link rel="stylesheet" href="../../css/chocolate.css">
+    <link rel="icon" type="image/webp" href="../../images/choclogo.webp"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<img src="../../images/choclogo.webp" class="logo" alt="Studio Chocolate Logo">
+
+<div style="display: flex">Change Password</div>
+
+<form id="create" action="changePass" method="post">
+    <div class="list">
+        <label for="createOrder">Order Number</label>
+        <input id="createOrder" class="field" type="number" name="order" disabled value="<%= order %>">
+        <label for="createPass">Password</label>
+        <input id="createPass" class="field" type="password" name="password" minlength="6" required>
+        <label for="createConfirm">Confirm Password</label>
+        <input id="createConfirm" class="field" type="password" name="confirm" minlength="6" required>
+        <div id="createError" class="error"></div>
+        <input type="hidden" name="req" value="<%= reqPass %>" >
+        <input id="createSubmit" type="submit" value="Get Started" class="field" disabled>
+    </div>
+</form>
+
+<a href="faq.html" style="padding: 8px 16px; font-size: x-small">FAQs</a>
+
+<script>
+	const createForm = document.getElementById('create')
+
+	function validateCreate() {
+		const inputs = createForm.getElementsByTagName('input')
+		const inputArray = Array.prototype.slice.call(inputs);
+		let valid = true;
+		let error = null;
+		if (!checkCookie()) {
+			error = 'Please enable cookies';
+			valid = false;
+		}
+		inputArray.forEach((item) => {
+			valid = valid && item.validity.valid;
+			if (item !== document.activeElement && item.classList.contains('validate')) {
+				error = error || item.validationMessage;
+			}
+		});
+
+		document.getElementById('createSubmit').disabled = !valid;
+		document.getElementById('createError').innerText = error;
+		return valid;
+	}
+
+	createForm.addEventListener('submit', (event) => {
+		let valid = validateCreate();
+		if (!valid) {
+			event.preventDefault();
+		}
+	});
+
+	const inputs = createForm.getElementsByTagName('input')
+	const inputArray = Array.prototype.slice.call(inputs);
+	inputArray.forEach((item) => {
+		item.addEventListener('blur', () => {
+			item.classList.add('validate');
+			validateCreate();
+		});
+
+		item.addEventListener('input', () => {
+			validateCreate();
+		});
+	});
+
+	const createPass = document.getElementById('createPass');
+	const createConfirm = document.getElementById('createConfirm');
+	createConfirm.addEventListener('input', () => {
+		createConfirm.setCustomValidity('');
+	});
+
+	createConfirm.addEventListener('blur', () => {
+		if (createPass.value !== createConfirm.value) {
+			createConfirm.setCustomValidity('Passwords must match.')
+		}
+	});
+
+	createForm.addEventListener('submit', (event) => {
+		let valid = validateCreate();
+		if (!valid) {
+			event.preventDefault();
+		}
+	});
+
+	function checkCookie() {
+		// Quick test if browser has cookieEnabled host property
+		if (navigator.cookieEnabled) return true;
+		// Create cookie
+		document.cookie = "cookietest=1";
+		const ret = document.cookie.indexOf("cookietest=") != -1;
+		// Delete cookie
+		document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+		return ret;
+	}
+
+	if (!checkCookie()) {
+		document.getElementById('createError').innerText = 'Please enable cookies';
+	}
+</script>
+</body>
+</html>

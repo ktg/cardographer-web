@@ -29,7 +29,7 @@
 <form id="create" action="create" method="post" <%= login ? 'style=display:none' : '' %>>
     <div class="list">
         <label for="createOrder">Order Number</label>
-        <input id="createOrder" class="field" type="number" name="order" required min="10000" max="30000" pattern="[0-9]+"
+        <input id="createOrder" class="field" type="number" name="order" required min="10000 " max="30000" pattern="[0-9]+"
                value="<%= order %>">
         <label for="createPass">Password</label>
         <input id="createPass" class="field" type="password" name="password" minlength="6" required>
@@ -147,8 +147,8 @@
 		return valid;
 	}
 
-	createForm.addEventListener('submit', (event) => {
-		let valid = validateCreate();
+	loginForm.addEventListener('submit', (event) => {
+		let valid = validateLogin();
 		if (!valid) {
 			event.preventDefault();
 		}

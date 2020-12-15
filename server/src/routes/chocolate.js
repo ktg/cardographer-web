@@ -10,6 +10,7 @@ const fs = require('fs');
 const {getMetadata} = require('page-metadata-parser');
 const domino = require('domino');
 const fetch = require('./fetchTimeout');
+const moment = require('moment');
 
 const global_salt = "-hybrid-choco-gifting-";
 
@@ -43,6 +44,14 @@ function log(req, orderid, message) {
 	});
 }
 
+function updatePassword(order, password) {
+	order.salt = namegen();
+	const saltedPass = password + global_salt + order.salt;
+	order.hash = crypto.createHash('sha256').update(saltedPass).digest('hex');
+	order.session = namegen();
+	delete order.passResetKey;
+}
+
 router.post('/create', async (req, res) => {
 	const orderid = req.body.order;
 	if (!orderid || !req.body.password || !req.body.confirm) {
@@ -58,19 +67,14 @@ router.post('/create', async (req, res) => {
 	if (order != null) {
 		res.render('intro.ejs', {order: orderid, login: true, error: 'That order already exists. Login instead?'});
 	} else {
-		const salt = namegen();
-		const password = req.body.password + global_salt + salt;
-		const hash = crypto.createHash('sha256').update(password).digest('hex');
-		const session = namegen();
-
-		await req.app.locals.chocDb.collection('gift').insertOne({
+		const order = {
 			"order": orderid,
-			"hash": hash,
-			"salt": salt,
-			"session": session,
 			"creation": new Date().getTime(),
 			"content": [{}, {}, {}, {}]
-		});
+		};
+		updatePassword(order, req.body.password);
+
+		await req.app.locals.chocDb.collection('gift').insertOne(order);
 		log(req, orderid, "Gift " + orderid + " created");
 
 		res.cookie('session', session);
@@ -125,7 +129,7 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 	const end = start + orders.length;
 	console.log(end);
 	console.log(count);
-	res.render('list.ejs', {orders: orders, page: page, nextPage: end < count, prevPage: page != 0})
+	res.render('list.ejs', {orders: orders, moment: moment, page: page, nextPage: end < count, prevPage: page != 0})
 });
 
 // router.get('/api/list/hKYy9ewNWi1YbgwqEhlk', (req, res) => {
@@ -143,6 +147,11 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 // 			res.status(500).send(err);
 // 		});
 // });
+//
+// router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
+// 	const result = await req.app.locals.chocDb.collection('log').find().toArray()
+// 	res.json(result);
+// });
 
 function updateMessages(req, order) {
 	const matcher = /^message(\d+)$/i;
@@ -156,11 +165,6 @@ function updateMessages(req, order) {
 		}
 	});
 }
-
-router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
-	const result = await req.app.locals.chocDb.collection('log').find().toArray()
-	res.json(result);
-});
 
 router.get('/gift/:orderid', async (req, res) => {
 	const orderid = req.params['orderid'];
@@ -208,8 +212,7 @@ router.get('/gift/:orderid/edit', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
 	if (order) {
-		const session = req.cookies.session;
-		if (order.session !== session) {
+		if (order.session !== req.cookies.session) {
 			res.redirect('../../');
 		} else {
 			while (order.content.length < 4) {
@@ -224,12 +227,55 @@ router.get('/gift/:orderid/edit', async (req, res) => {
 	}
 });
 
+router.get('/gift/:orderid/changePass', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
+	if (order) {
+		if (order.session !== req.cookies.session && order.passResetKey !== req.query.req) {
+			res.redirect('../../');
+		} else {
+			res.render('pass.ejs', {order: orderid, reqPass: req.query.req});
+		}
+	} else {
+		res.status(404).send();
+	}
+});
+
+router.post('/gift/:orderid/changePass', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
+	if (order) {
+		if (order.session === req.cookies.session || order.passResetKey === req.body.reqPass) {
+			updatePassword(order, req.body.password);
+			log(req, orderid, "Password Changed");
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+		}
+		res.redirect('../../');
+	} else {
+		res.status(404).send();
+	}
+});
+
+
+router.get('/gift/:orderid/resetPass/cwrLZiQAix2hxlu3K8Pt', async (req, res) => {
+	const orderid = req.params['orderid'];
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
+	if (order) {
+		order.passResetKey = namegen();
+		await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+		log(req, orderid, "New Password Requested");
+		res.redirect('../changePass?req=' + order.passResetKey);
+	} else {
+		res.status(404).send("Not Found");
+	}
+});
+
+
 router.post('/gift/:orderid/edit', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
 	if (order) {
-		const session = req.cookies.session;
-		if (order.session !== session) {
+		if (order.session !== req.cookies.session) {
 			res.redirect('../../');
 		} else {
 			updateMessages(req, order);
@@ -247,8 +293,7 @@ router.post('/gift/:orderid/deleteItem', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
 	if (order) {
-		const session = req.cookies.session;
-		if (order.session !== session) {
+		if (order.session !== req.cookies.session) {
 			res.redirect('../../');
 		} else {
 			const removeIndex = req.body.item;
@@ -274,11 +319,9 @@ router.post('/gift/:orderid/addMessage', async (req, res) => {
 	const orderid = req.params['orderid'];
 	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
 	if (order) {
-		const session = req.cookies.session;
-		if (order.session !== session) {
+		if (order.session !== req.cookies.session) {
 			res.redirect('../../');
 		} else {
-
 			const index = req.body.item;
 			order.content[index] = {
 				uri: "",
@@ -349,27 +392,6 @@ router.post('/gift/:orderid/addFile', upload.single('file'), async (req, res) =>
 		}
 	} else {
 		res.status(404).send();
-	}
-});
-
-router.post('/gift/:orderid/updatePass', async (req, res) => {
-	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
-	if (order) {
-		if (req.body.key !== 'cwrLZiQAix2hxlu3K8Pt') {
-			res.redirect('../../');
-		} else {
-			const salt = namegen();
-			const password = req.body.password + global_salt + salt;
-			order.hash = crypto.createHash('sha256').update(password).digest('hex');
-			order.salt = salt;
-			order.session = '';
-			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
-			log(req, orderid, "Password Updated");
-			res.redirect('../../');
-		}
-	} else {
-		res.status(404).send("Not Found");
 	}
 });
 
