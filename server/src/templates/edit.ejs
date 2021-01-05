@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Studio Chocolate Hybrid Gift</title>
+    <title>Editing Studio Chocolate Hybrid Gift</title>
     <link rel="stylesheet" href="../../css/chocolate.css">
     <link rel="icon" type="image/webp" href="../../images/choclogo.webp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -150,9 +150,11 @@
     <div style="display: flex; flex-wrap:  wrap; width: 100%; padding-top: 16px; align-items: center">
         <img src="../../images/uon.svg" style="width: 150px"/>
         <a href="../../faq.html" style="padding: 16px; font-size: smaller">FAQs</a>
-        <a href="preview" style="flex: 1; padding: 16px; text-align: end">Preview</a>
+        <a href="javascript:{}" onclick="document.getElementById('previewForm').requestSubmit(); return false;"
+           style="flex: 1; padding: 16px; text-align: end">Preview</a>
+        <form id="previewForm" action="preview" method="post"></form>
         <form id="saveForm" action="edit" method="post">
-            <input id="saveButton" type="submit" value="Save">
+            <input type="submit" value="Save">
         </form>
     </div>
 </div>

@@ -189,14 +189,16 @@ router.get('/gift/:orderid', async (req, res) => {
 	}
 });
 
-router.get('/gift/:orderid/preview', async (req, res) => {
+router.post('/gift/:orderid/preview', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid})
+	const order = await req.app.locals.chocDb.collection('gift').findOne({"order": orderid});
 	if (order) {
-		const session = req.cookies.session;
-		if (order.session !== session) {
+		if (order.session !== req.cookies.session) {
 			res.redirect('../../');
 		} else {
+			updateMessages(req, order);
+			await req.app.locals.chocDb.collection('gift').replaceOne({"order": orderid}, order);
+			order.saved = true;
 			order.prefix = '../'
 			order.preview = true;
 			console.log(order);
