@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/qrcode/:orderid', async (req, res) => {
 	const orderid = req.params['orderid'];
-	const url = 'http://hybridgifting.com/gift/' + orderid;
+	const url = 'https://hybridgifting.com/gift/' + orderid;
 	await QRCode.toFileStream(res, url);
 });
 
