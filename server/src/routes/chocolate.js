@@ -149,7 +149,13 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 // });
 
 router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
-	const result = await req.app.locals.chocDb.collection('log').find().toArray()
+	const result = await req.app.locals.chocDb.collection('log').find().toArray();
+	result.forEach((item) => {
+		delete item._id;
+		const date = new Date(item.time);
+		item.date = date.toISOString();
+		delete item.time;
+	});
 	res.json(result);
 });
 
