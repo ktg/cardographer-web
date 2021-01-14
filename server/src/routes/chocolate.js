@@ -156,7 +156,7 @@ router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
 	res.json(items);
 });
 
-router.get('/api/csv/DKYqmDEgDxnUTCp1eaWg', async (req, res) => {
+router.get('/api/csv/DKYqmDEgDxnUTCp1eaWg.csv', async (req, res) => {
 	const items = await req.app.locals.chocDb.collection('log').find().sort({"gift": 1, "time": 1}).toArray();
 	let result = "gift,date,message\n";
 	items.forEach((item) => {
