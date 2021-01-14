@@ -147,11 +147,11 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 // 			res.status(500).send(err);
 // 		});
 // });
-//
-// router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
-// 	const result = await req.app.locals.chocDb.collection('log').find().toArray()
-// 	res.json(result);
-// });
+
+router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
+	const result = await req.app.locals.chocDb.collection('log').find().toArray()
+	res.json(result);
+});
 
 function updateMessages(req, order) {
 	const matcher = /^message(\d+)$/i;
