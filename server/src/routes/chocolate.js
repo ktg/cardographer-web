@@ -149,14 +149,25 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 // });
 
 router.get('/api/logs/PktPDc3A5mL4aTzJB2oW', async (req, res) => {
-	const result = await req.app.locals.chocDb.collection('log').find().sort({"gift": 1, "time": 1}).toArray();
-	result.forEach((item) => {
+	const items = await req.app.locals.chocDb.collection('log').find().toArray();
+	items.forEach((item) => {
+		delete item._id;
+	});
+	res.json(items);
+});
+
+router.get('/api/csv/DKYqmDEgDxnUTCp1eaWg', async (req, res) => {
+	const items = await req.app.locals.chocDb.collection('log').find().sort({"gift": 1, "time": 1}).toArray();
+	let result = "gift,date,message\n";
+	items.forEach((item) => {
 		delete item._id;
 		const date = new Date(item.time);
 		item.date = date.toISOString();
 		delete item.time;
+		result = result + item.gift + "," + date.toISOString() + "," + item.message + "\n";
 	});
-	res.json(result);
+	res.contentType("text/csv");
+	res.send(result);
 });
 
 function updateMessages(req, order) {
