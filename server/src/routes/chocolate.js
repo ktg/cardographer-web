@@ -160,11 +160,13 @@ router.get('/api/csv/DKYqmDEgDxnUTCp1eaWg', async (req, res) => {
 	const items = await req.app.locals.chocDb.collection('log').find().sort({"gift": 1, "time": 1}).toArray();
 	let result = "gift,date,message\n";
 	items.forEach((item) => {
-		delete item._id;
-		const date = new Date(item.time);
-		item.date = date.toISOString();
-		delete item.time;
-		result = result + item.gift + "," + date.toISOString() + "," + item.message + "\n";
+		let gift = item.gift.parseInt();
+		if((!isNaN(gift) && gift > 12700 && gift < 13000) || gift === 15571814) {
+			const date = new Date(item.time);
+			item.date = date.toISOString();
+			delete item.time;
+			result = result + item.gift + "," + date.toISOString() + "," + item.message + "\n";
+		}
 	});
 	res.contentType("text/csv");
 	res.send(result);
