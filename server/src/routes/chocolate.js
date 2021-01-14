@@ -40,6 +40,7 @@ function log(req, orderid, message) {
 	req.app.locals.chocDb.collection('log').insertOne({
 		"time": new Date().getTime(),
 		"gift": orderid,
+		"user-agent": req.headers['user-agent'],
 		"message": message
 	});
 }
@@ -127,8 +128,6 @@ router.get('/list/XyuWdahM55yCTyF8dxcK', async (req, res) => {
 		order: -1
 	}).collation({locale: "en_US", numericOrdering: true}).skip(start).limit(pageOrders).toArray()
 	const end = start + orders.length;
-	console.log(end);
-	console.log(count);
 	res.render('list.ejs', {orders: orders, moment: moment, page: page, nextPage: end < count, prevPage: page != 0})
 });
 
@@ -161,11 +160,9 @@ router.get('/api/csv/DKYqmDEgDxnUTCp1eaWg.csv', async (req, res) => {
 	let result = "gift,date,message\n";
 	items.forEach((item) => {
 		let gift = item.gift.parseInt();
+		console.log(gift);
 		if((!isNaN(gift) && gift > 12700 && gift < 13000) || gift === 15571814) {
-			const date = new Date(item.time);
-			item.date = date.toISOString();
-			delete item.time;
-			result = result + item.gift + "," + date.toISOString() + "," + item.message + "\n";
+			result = result + gift + "," + new Date(item.time).toISOString() + "," + item.message + "\n";
 		}
 	});
 	res.contentType("text/csv");
@@ -194,9 +191,7 @@ router.get('/gift/:orderid', async (req, res) => {
 			order.prefix = '';
 			order.content.forEach((item) => {
 				if (item && item.uri) {
-					console.log(item.uri);
 					item.uri = item.uri.replace(/^..\//, '');
-					console.log(item.uri)
 				}
 			})
 		}
