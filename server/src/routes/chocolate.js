@@ -211,6 +211,7 @@ router.get('/api/chart', async (req, res) => {
 			}
 		}
 	});
+	console.log(JSON.stringify(data));
 	res.render('chart.ejs', { data: data });
 });
 
