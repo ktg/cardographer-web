@@ -209,17 +209,17 @@ router.get('/api/chart', async (req, res) => {
 				line.marker.color.push('#003f5c66');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
-				line.text.push('Edited\n' + itemCount + '/4 Items');
+				line.text.push('Edited. Contains ' + itemCount + '/4 Items');
 			} else if(item.message.startsWith('Previewed')) {
 				line.marker.color.push('#bc509033');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
-				line.text.push('Previewed\n' + itemCount + '/4 Items');
+				line.text.push('Previewed. Contains ' + itemCount + '/4 Items');
 			} else if(item.message.startsWith('Viewed')) {
 				line.marker.color.push('#ffa60066');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
-				line.text.push('Viewed\n' + itemCount + '/4 Items');
+				line.text.push('Viewed. Contains ' + itemCount + '/4 Items');
 			}
 		}
 	});
