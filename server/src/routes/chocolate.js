@@ -161,12 +161,58 @@ router.get('/api/csv/DKYqmDEgDxnUTCp1eaWg.csv', async (req, res) => {
 	items.forEach((item) => {
 		let gift = parseInt(item.gift);
 		console.log(gift);
-		if((!isNaN(gift) && gift > 12700 && gift < 13000) || gift === 15571814) {
+		if((!isNaN(gift) && gift > 12700 && gift < 15000) || gift === 15571814) {
 			result = result + gift + "," + new Date(item.time).toISOString() + "," + item.message + "\n";
 		}
 	});
 	res.contentType("text/csv");
 	res.send(result);
+});
+
+
+router.get('/api/chart', async (req, res) => {
+	const items = await req.app.locals.chocDb.collection('log').find().sort({"gift": 1, "time": 1}).toArray();
+	let data = [];
+	let line = {};
+	let previousGift = -1;
+
+	items.forEach((item) => {
+		let gift = parseInt(item.gift);
+		if((!isNaN(gift) && gift > 12700 && gift < 15000) || gift === 15571814) {
+			if(gift !== previousGift) {
+				line = {
+					x: [],
+					y: [],
+					mode: 'lines+markers',
+					marker: {
+						color: [],
+						size: 8
+					},
+					line: {
+						color: 'rgba(128, 128, 128, 0.5)',
+						width: 2
+					}
+				};
+				previousGift = gift;
+				data.push(line);
+			}
+			if(item.message.startsWith('Item') || item.message.startsWith('Created')) {
+				line.marker.color.push('#003f5c');
+				line.y.push(item.gift);
+				line.x.push(new Date(item.time).toISOString());
+			} else if(item.message.startsWith('Previewed')) {
+				line.marker.color.push('#bc5090');
+				line.y.push(item.gift);
+				line.x.push(new Date(item.time).toISOString());
+			} else if(item.message.startsWith('Viewed')) {
+				line.marker.color.push('#ffa600');
+				line.y.push(item.gift);
+				line.x.push(new Date(item.time).toISOString());
+			}
+		}
+	});
+	res.contentType("text/csv");
+	res.render('chart.ejs', { data: data });
 });
 
 function updateMessages(req, order) {

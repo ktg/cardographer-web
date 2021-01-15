@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Studio Chocolate Hybrid Gifting</title>
+	<link rel="stylesheet" href="css/chocolate.css">
+	<link rel="icon" type="image/webp" href="images/choclogo.webp"/>
+	<script src="js/plotly.min.js"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<img src="images/choclogo.webp" class="logo" alt="Studio Chocolate Logo">
+
+<div id="plot"></div>
+
+<script>
+	const data = <%= data %>;
+	const layout = {};
+	const config = {responsive: true}
+	Plotly.newPlot('plot', data, layout, config);
+</script>
+</body>
+</html>
