@@ -13,7 +13,7 @@
 <div id="plot"></div>
 
 <script>
-	const data = <%= data %>;
+	const data = <%- JSON.stringify(data) %>;
 	const layout = {};
 	const config = {responsive: true}
 	Plotly.newPlot('plot', data, layout, config);
