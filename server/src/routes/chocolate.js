@@ -198,15 +198,15 @@ router.get('/api/chart', async (req, res) => {
 			}
 			if(item.message.startsWith('Item') || item.message.startsWith('Created')) {
 				line.marker.color.push('#003f5c');
-				line.y.push(item.gift);
+				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
 			} else if(item.message.startsWith('Previewed')) {
 				line.marker.color.push('#bc5090');
-				line.y.push(item.gift);
+				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
 			} else if(item.message.startsWith('Viewed')) {
 				line.marker.color.push('#ffa600');
-				line.y.push(item.gift);
+				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
 			}
 		}
