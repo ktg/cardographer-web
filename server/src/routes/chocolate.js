@@ -197,12 +197,12 @@ router.get('/api/chart', async (req, res) => {
 				previousGift = gift;
 				data.push(line);
 			}
-			if(item.message.startsWith('Item') || item.message.startsWith('Created')) {
+			if(item.message.startsWith('Item') || item.message.startsWith('Gift')) {
 				line.marker.color.push('#003f5c66');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
 			} else if(item.message.startsWith('Previewed')) {
-				line.marker.color.push('#bc509066');
+				line.marker.color.push('#bc509033');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
 			} else if(item.message.startsWith('Viewed')) {
