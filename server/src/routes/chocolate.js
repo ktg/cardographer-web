@@ -183,6 +183,7 @@ router.get('/api/chart', async (req, res) => {
 				line = {
 					x: [],
 					y: [],
+					text: [],
 					mode: 'lines+markers',
 					name: item.gift,
 					marker: {
@@ -201,14 +202,17 @@ router.get('/api/chart', async (req, res) => {
 				line.marker.color.push('#003f5c66');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
+				line.text.push('Edited');
 			} else if(item.message.startsWith('Previewed')) {
 				line.marker.color.push('#bc509033');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
+				line.text.push('Previewed');
 			} else if(item.message.startsWith('Viewed')) {
 				line.marker.color.push('#ffa60066');
 				line.y.push("Order " + item.gift);
 				line.x.push(new Date(item.time).toISOString());
+				line.text.push('Viewed');
 			}
 		}
 	});
