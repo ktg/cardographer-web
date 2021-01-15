@@ -201,9 +201,9 @@ router.get('/api/chart', async (req, res) => {
 				data.push(line);
 			}
 			if(item.message.startsWith('Item') || item.message.startsWith('Gift')) {
-				if(item.message.contains('added')) {
+				if(item.message.includes('added')) {
 					itemCount ++;
-				} else if(item.message.contains('removed')) {
+				} else if(item.message.includes('removed')) {
 					itemCount --;
 				}
 				line.marker.color.push('#003f5c66');
