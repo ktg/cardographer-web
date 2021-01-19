@@ -78,7 +78,7 @@ router.post('/create', async (req, res) => {
 		await req.app.locals.chocDb.collection('gift').insertOne(order);
 		log(req, orderid, "Gift " + orderid + " created");
 
-		res.cookie('session', session);
+		res.cookie('session', order.session);
 		res.redirect('gift/' + orderid + '/edit');
 	}
 });
