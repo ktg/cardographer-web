@@ -1,3 +1,5 @@
 <style global lang="postcss">
-  @import "../global.pcss";
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
 </style>
