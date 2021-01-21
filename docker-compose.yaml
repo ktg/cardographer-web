@@ -2,24 +2,28 @@ version: '3.1'
 
 volumes:
     uploads: { }
+    db: { }
 
 services:
     mongo:
         image: mongo
-        hostname: mongo
         expose:
             - "27017"
-        restart: always
+        restart: unless-stopped
         volumes:
-            - './server/db:/data/db'
-            - './server/backup:/backup'
+            - db:/data/db
 
     server:
-        build: server
-        restart: always
+        build:
+            context: .
+            dockerfile: dev.Dockerfile
+        restart: unless-stopped
         depends_on:
             - 'mongo'
         ports:
-            - '80:80'
+            - "3000:3000"
+            - "10000:10000"
         volumes:
+            - ./src:/app/src/:consistent
+            - ./static:/app/static/:ro
             - uploads:/app/uploads
