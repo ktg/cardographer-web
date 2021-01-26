@@ -27,7 +27,7 @@ const attemptConnection = function () {
 			console.log("Connected to DB");
 			const db = client.db('cardographer');
 
-			app.locals.cardDb = db;
+			app.locals.db = db;
 			app.locals.dump = db.collection('dump');
 			app.locals.xSpace = db.collection('xSpace');
 
