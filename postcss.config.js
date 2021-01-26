@@ -7,8 +7,6 @@ const purgecss = require('@fullhuman/postcss-purgecss')
 const mode = process.env.NODE_ENV;
 const production = mode === 'production';
 
-console.log(mode);
-
 module.exports = {
 	plugins: [
 		postcssImport,
