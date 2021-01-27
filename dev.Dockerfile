@@ -6,4 +6,4 @@ COPY package-lock.json /app/
 ENV NODE_ENV=development
 RUN npm install
 COPY *.config.js /app/
-CMD ["npm", "run", "dev" ]
+CMD ["npm", "run", "dev"]
