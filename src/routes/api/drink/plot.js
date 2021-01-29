@@ -1,10 +1,8 @@
 const simplify = require("simplify-js");
 
 function createLine(chart, data, name, colour) {
-	console.log(data);
 	if (data.length > 1) {
 		const simple = simplify(data, 0.01, false);
-		console.log(simple);
 		chart.push({
 			x: simple.map(point => new Date(point.x).toISOString()),
 			y: simple.map(point => point.y),
