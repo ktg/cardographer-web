@@ -3,16 +3,27 @@ const simplify = require("simplify-js");
 function createLine(chart, data, name, colour) {
 	if (data.length > 1) {
 		const simple = simplify(data, 0.01, false);
-		chart.push({
-			x: simple.map(point => new Date(point.x).toISOString()),
-			y: simple.map(point => point.y),
+		let line = {
+			x: [],
+			y: [],
 			mode: 'lines',
 			name: name,
 			line: {
 				color: colour,
 				width: 1
 			}
+		};
+		let prev = simple.x[0];
+		simple.forEach((item) => {
+			if(Math.abs(prev - item.x) >= 1000) {
+				line.x.push(null);
+				line.y.push(null);
+			}
+			line.x.push(new Date(item.x).toISOString());
+			line.y.push(item.y);
+			prev = item.x;
 		});
+		chart.push(line);
 	}
 }
 
