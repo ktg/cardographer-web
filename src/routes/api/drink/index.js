@@ -1,6 +1,6 @@
 export async function post(req, res, _) {
 	const dataSet = req.body;
-	if(dataSet.data.isArray() && typeof dataSet.device === 'string') {
+	if(Array.isArray(dataSet.data) && typeof dataSet.device === 'string') {
 		const device = dataSet.device.slice(-5);
 		dataSet.data.forEach((item) => {
 			item.device = device;
