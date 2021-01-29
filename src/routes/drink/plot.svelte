@@ -14,8 +14,15 @@
 
 <div id='plotDiv'></div>
 
+<style>
+	#plotDiv {
+		width: 100%;
+		height: 800px;
+	}
+</style>
+
 <script>
-	import {onMount} from 'svelte';
+	// TODO import {onMount} from 'svelte';
 
 	export let plot;
 
