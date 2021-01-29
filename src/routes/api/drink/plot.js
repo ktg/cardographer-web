@@ -13,7 +13,7 @@ function createLine(chart, data, name, colour) {
 				width: 1
 			}
 		};
-		let prev = simple.x[0];
+		let prev = simple[0].x;
 		simple.forEach((item) => {
 			if(Math.abs(prev - item.x) >= 1000) {
 				line.x.push(null);
