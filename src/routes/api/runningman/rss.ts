@@ -1,7 +1,7 @@
-import domino from 'domino';
-//const domino = require('domino');
-const fetch = require('node-fetch');
-const AbortController = require('abort-controller');
+import AbortController from "abort-controller";
+import {createDocument} from 'domino';
+import {fetch} from 'node-fetch';
+import type {Request, Response} from "express";
 
 const escapeHTML = str => str.replace(/[&<>'"]/g,
 	tag => ({
@@ -12,7 +12,7 @@ const escapeHTML = str => str.replace(/[&<>'"]/g,
 		'"': '&quot;'
 	}[tag]));
 
-async function fetchTimeout(url, time) {
+async function fetchTimeout(url: string, time: number) {
 	const controller = new AbortController();
 	const timeout = setTimeout(() => {
 		controller.abort();
@@ -29,10 +29,10 @@ async function fetchTimeout(url, time) {
 	}
 }
 
-export async function get(req, res, _) {
+export async function get(req: Request, res: Response) {
 	const response = await fetchTimeout('https://www.myrunningman.com/episodes/newest', 10000);
 	const html = await response.text();
-	const doc = domino.createWindow(html).document;
+	const doc = createDocument(html);
 	const links = doc.getElementsByTagName('a');
 	const linkList = Array.prototype.slice.call(links);
 	let previousLink = null;

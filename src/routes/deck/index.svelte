@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
 	export async function preload({ params, query }) {
 		const res = await this.fetch(`/api/deck/list`);
 		const data = await res.json();

@@ -1,4 +1,4 @@
-import { timestamp, files, shell, routes } from '@sapper/service-worker';
+import {timestamp, files, shell} from '@sapper/service-worker';
 
 const ASSETS = `cache${timestamp}`;
 
@@ -7,18 +7,18 @@ const ASSETS = `cache${timestamp}`;
 const to_cache = shell.concat(files);
 const cached = new Set(to_cache);
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event: ExtendableEvent) => {
 	event.waitUntil(
 		caches
 			.open(ASSETS)
 			.then(cache => cache.addAll(to_cache))
 			.then(() => {
-				self.skipWaiting();
+				((self as any) as ServiceWorkerGlobalScope).skipWaiting();
 			})
 	);
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event: ExtendableEvent) => {
 	event.waitUntil(
 		caches.keys().then(async keys => {
 			// delete old caches
@@ -26,12 +26,12 @@ self.addEventListener('activate', event => {
 				if (key !== ASSETS) await caches.delete(key);
 			}
 
-			self.clients.claim();
+			await ((self as any) as ServiceWorkerGlobalScope).clients.claim();
 		})
 	);
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event: FetchEvent) => {
 	if (event.request.method !== 'GET' || event.request.headers.has('range')) return;
 
 	const url = new URL(event.request.url);
@@ -69,9 +69,11 @@ self.addEventListener('fetch', event => {
 			.then(async cache => {
 				try {
 					const response = await fetch(event.request);
-					cache.put(event.request, response.clone());
+					if (event.request.url.indexOf('.tile.openstreetmap.org/') === -1) {
+						cache.put(event.request, response.clone());
+					}
 					return response;
-				} catch(err) {
+				} catch (err) {
 					const response = await cache.match(event.request);
 					if (response) return response;
 

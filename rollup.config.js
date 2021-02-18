@@ -7,9 +7,11 @@ import {terser} from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import sveltePreprocess from 'svelte-preprocess';
+import typescript from "@rollup/plugin-typescript";
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
+const sourcemap = dev ? "inline" : false;
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
 const preprocess = sveltePreprocess({
@@ -23,8 +25,8 @@ const onwarn = (warning, onwarn) =>
 
 export default {
 	client: {
-		input: config.client.input(),
-		output: config.client.output(),
+		input: config.client.input().replace(/\.js$/, ".ts"),
+		output: {...config.client.output(), sourcemap},
 		plugins: [
 			replace({
 				'process.browser': true,
@@ -42,7 +44,13 @@ export default {
 				browser: true,
 				dedupe: ['svelte']
 			}),
-			commonjs(),
+			commonjs({
+				sourceMap: !!sourcemap,
+			}),
+			typescript({
+				noEmitOnError: !dev,
+				sourceMap: !!sourcemap,
+			}),
 
 			legacy && babel({
 				extensions: ['.js', '.mjs', '.html', '.svelte'],
@@ -71,8 +79,8 @@ export default {
 	},
 
 	server: {
-		input: config.server.input(),
-		output: config.server.output(),
+		input: {server: config.server.input().server.replace(/\.js$/, ".ts")},
+		output: {...config.server.output(), sourcemap},
 		plugins: [
 			replace({
 				'process.browser': false,
@@ -89,7 +97,13 @@ export default {
 			resolve({
 				dedupe: ['svelte']
 			}),
-			commonjs()
+			commonjs({
+				sourceMap: !!sourcemap,
+			}),
+			typescript({
+				noEmitOnError: !dev,
+				sourceMap: !!sourcemap,
+			}),
 		],
 		external: Object.keys(pkg.dependencies).concat(require('module').builtinModules),
 
@@ -98,15 +112,21 @@ export default {
 	},
 
 	serviceworker: {
-		input: config.serviceworker.input(),
-		output: config.serviceworker.output(),
+		input: config.serviceworker.input().replace(/\.js$/, ".ts"),
+		output: {...config.serviceworker.output(), sourcemap},
 		plugins: [
 			resolve(),
 			replace({
 				'process.browser': true,
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
-			commonjs(),
+			commonjs({
+				sourceMap: !!sourcemap,
+			}),
+			typescript({
+				noEmitOnError: !dev,
+				sourceMap: !!sourcemap,
+			}),
 			!dev && terser()
 		],
 

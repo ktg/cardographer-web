@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
 	export async function preload({ params, query }) {
 		const id = params.id;
 		const res = await this.fetch(`/api/deck/${id}`);

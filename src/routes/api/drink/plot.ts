@@ -1,6 +1,8 @@
-const simplify = require("simplify-js");
+import simplify from "simplify-js";
+import type {Request, Response} from "express";
+import {getMongoCollection} from "../../../shared/db";
 
-function createLine(chart, data, name, colour) {
+function createLine(chart, data, name: string, colour: string) {
 	if (data.length > 1) {
 		const simple = simplify(data, 0.01, false);
 		let line = {
@@ -27,8 +29,8 @@ function createLine(chart, data, name, colour) {
 	}
 }
 
-export async function get(req, res, _) {
-	const result = await req.app.locals.db.collection('drink').find().sort({"device": 1, "time": 1}).toArray();
+export async function get(req: Request, res: Response) {
+	const result = await getMongoCollection(req, 'drink').find().sort({"device": 1, "time": 1}).toArray();
 
 	let data = [];
 	let xdata = [];

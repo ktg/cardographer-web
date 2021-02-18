@@ -16,7 +16,7 @@ services:
     server:
         build:
             context: .
-            dockerfile: dev.Dockerfile
+            dockerfile: Dockerfile
         restart: unless-stopped
         depends_on:
             - 'mongo'
@@ -24,6 +24,6 @@ services:
             - "3000:3000"
             - "10000:10000"
         volumes:
-            - ./src:/app/src/:consistent
-            - ./static:/app/static/:ro
+            #- ./src:/app/src/:consistent
+            #- ./static:/app/static/:ro
             - uploads:/app/uploads
