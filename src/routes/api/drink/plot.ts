@@ -33,32 +33,32 @@ export async function get(req: Request, res: Response) {
 	const result = await getMongoCollection(req, 'drink').find().sort({"device": 1, "time": 1}).toArray();
 
 	let data = [];
-	let xdata = [];
-	let ydata = [];
-	let zdata = [];
+	let magdata = [];
+	//let ydata = [];
+	//let zdata = [];
 	let device = "";
 
 	result.forEach((item) => {
 		if (item.device !== device) {
-			createLine(data, xdata, device + " x", '#B44');
-			createLine(data, ydata, device + " y", '#4B4');
-			createLine(data, zdata, device + " z", '#44B');
+			createLine(data, magdata, device, '#534');
+			//createLine(data, ydata, device + " y", '#4B4');
+			//createLine(data, zdata, device + " z", '#44B');
 
-			xdata = [];
-			ydata = [];
-			zdata = [];
+			magdata = [];
+			//ydata = [];
+			//zdata = [];
 			device = item.device
 		}
 
 		if ('x' in item) {
-			xdata.push({x: item.time, y: item.x});
-			ydata.push({x: item.time, y: item.y});
-			zdata.push({x: item.time, y: item.z});
+			magdata.push({x: item.time, y: Math.abs(item.x + item.y + item.z)});
+			//ydata.push({x: item.time, y: item.y});
+			//zdata.push({x: item.time, y: item.z});
 		}
 	});
-	createLine(data, xdata, device + " x", '#B44');
-	createLine(data, ydata, device + " y", '#4B4');
-	createLine(data, zdata, device + " z", '#44B');
+	createLine(data, magdata, device, '#534');
+	//createLine(data, ydata, device + " y", '#4B4');
+	//createLine(data, zdata, device + " z", '#44B');
 
 	res.json(data);
 }
