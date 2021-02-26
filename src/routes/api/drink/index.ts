@@ -19,7 +19,7 @@ export async function post(req: Request, res: Response) {
 }
 
 export async function del(req: Request, res: Response, next: NextFunction) {
-	if (req.params['key'] == 'aamo2r0p2ngWw4K4i5AN') {
+	if (req.query.key == 'aamo2r0p2ngWw4K4i5AN') {
 		res.status(200).json({"result": "success"})
 	} else {
 		next()
