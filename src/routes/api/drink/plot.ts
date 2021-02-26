@@ -51,7 +51,7 @@ export async function get(req: Request, res: Response) {
 		}
 
 		if ('x' in item) {
-			magdata.push({x: item.time, y: Math.abs(item.x + item.y + item.z)});
+			magdata.push({x: item.time, y: Math.abs(item.x) + Math.abs(item.y) + Math.abs(item.z)});
 			//ydata.push({x: item.time, y: item.y});
 			//zdata.push({x: item.time, y: item.z});
 		}
