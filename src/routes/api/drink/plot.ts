@@ -50,10 +50,10 @@ export async function get(req: Request, res: Response) {
 			device = item.device
 		}
 
-		if ('ax' in item) {
-			xdata.push({x: item.time, y: item.ax});
-			ydata.push({x: item.time, y: item.ay});
-			zdata.push({x: item.time, y: item.az});
+		if ('x' in item) {
+			xdata.push({x: item.time, y: item.x});
+			ydata.push({x: item.time, y: item.y});
+			zdata.push({x: item.time, y: item.z});
 		}
 	});
 	createLine(data, xdata, device + " x", '#B44');
