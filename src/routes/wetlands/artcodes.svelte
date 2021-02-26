@@ -12,8 +12,8 @@
 	//export let plot;
 
 	export async function mapSetup(elem: HTMLElement) {
-		const {createScanner, ScannerUI} = await import('artcodes-js');
-		const ui = new ScannerUI();
+		//const {createScanner, ScannerUI} = await import('artcodes-js');
+		//const ui = new ScannerUI();
 
 	}
 </script>
