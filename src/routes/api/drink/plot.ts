@@ -17,7 +17,7 @@ function createLine(chart, data, name: string, colour: string) {
 		};
 		let prev = simple[0].x;
 		simple.forEach((item) => {
-			if(Math.abs(prev - item.x) >= 1000) {
+			if (Math.abs(prev - item.x) >= 1000) {
 				line.x.push(null);
 				line.y.push(null);
 			}
