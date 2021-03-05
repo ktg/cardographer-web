@@ -37,6 +37,7 @@
 		"@types/mongodb": "^3.6.8",
 		"@types/node": "^14.14.31",
 		"@types/node-fetch": "^2.5.8",
+		"artcodes-js": "ktg/artcodes-js",
 		"cssnano": "^4.1.10",
 		"leaflet": "^1.7.1",
 		"mirada": "^0.0.15",

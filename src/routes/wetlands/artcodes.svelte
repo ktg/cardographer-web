@@ -3,17 +3,67 @@
 
 <svelte:head>
 	<title>Wetlands</title>
-	<link rel="stylesheet" href="/leaflet.css"/>
 </svelte:head>
 
-<div class="w-full" style="height: 800px" ></div>
+<div class="w-full" style="height: 800px">
+	<canvas bind:this={canvas} class:hidden="{status !== ScannerState.scanning}"></canvas>
+	<video bind:this={video} class="hidden"></video>
+	{#if (status === ScannerState.idle)}
+		<button id="startButton" on:click={start}>Start</button>
+	{/if}
+	{#if (status === ScannerState.scanning)}
+		<button id="stopButton" on:click={stop}>Stop</button>
+	{/if}
+</div>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 
 <script lang="ts">
-	//export let plot;
 
-	export async function mapSetup(elem: HTMLElement) {
-		//const {createScanner, ScannerUI} = await import('artcodes-js');
-		//const ui = new ScannerUI();
+	import {ScannerState} from "artcodes-js";
+	import {onMount} from "svelte";
+	import type {Scanner} from 'artcodes-js';
 
+	let canvas: HTMLCanvasElement;
+	let video: HTMLVideoElement;
+	let status = ScannerState.loading
+	let scanner: Scanner
+
+	function start() {
+		scanner.start()
 	}
+
+	function stop() {
+		scanner.stop()
+	}
+
+	onMount(async () => {
+		const {createScanner} = await import('artcodes-js');
+		const experience = {
+			name: "Test",
+			actions: [
+				{
+					codes: ["1:1:2:3:5"],
+					name: "Test Marker",
+					url: "https://cardographer.cs.nott.ac.uk"
+				}
+			]
+		}
+
+		const options = {
+			canvas: canvas,
+			video: video,
+			markerChanged: (marker) => {
+				console.log(marker);
+			},
+			stateChanged: (state) => {
+				status = state
+			}
+		}
+		scanner = await createScanner(experience, options)
+	});
 </script>
