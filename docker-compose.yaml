@@ -1,8 +1,10 @@
 version: '3.1'
 
 volumes:
-    uploads: { }
-    db: { }
+    uploads: {}
+    db: {}
+    static: {}
+    src: {}
 
 services:
     mongo:
@@ -13,10 +15,20 @@ services:
         volumes:
             - db:/data/db
 
+    sync:
+        build: docker/sync
+        restart: unless-stopped
+        volumes:
+            - ./src:/dev/src/:consistent
+            - ./static:/dev/static/:ro
+            - src:/app/src
+            - static:/app/static
+
+
     server:
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
         restart: unless-stopped
         depends_on:
             - 'mongo'
@@ -24,6 +36,6 @@ services:
             - "3000:3000"
             - "10000:10000"
         volumes:
-            #- ./src:/app/src/:consistent
-            #- ./static:/app/static/:ro
             - uploads:/app/uploads
+            - src:/app/src
+            - static:/app/static
