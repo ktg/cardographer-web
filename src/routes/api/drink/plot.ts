@@ -12,14 +12,13 @@ export async function get(req: Request, res: Response) {
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
-		if (typeof item.x == "number") {
+		if ('x' in item) {
 			if (item.device != prev.device) {
 				createLine(lines, dataAccelDrink, prev.device + " Drinking", '#282')
 				createLine(lines, dataAccel, prev.device, '#558')
 				dataAccel = []
 				dataAccelDrink = []
 			}
-			prev = item
 			if (item.tag != prev.tag && dataAccel.length != 0) {
 				dataAccel.push(convertItem(item))
 				dataAccelDrink.push(convertItem(item))
@@ -28,6 +27,7 @@ export async function get(req: Request, res: Response) {
 			} else {
 				dataAccel.push(convertItem(item))
 			}
+			prev = item
 		}
 	})
 
