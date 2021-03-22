@@ -1,23 +1,19 @@
-<script context="module" lang="ts">
-	export async function preload() {
-		const res = await this.fetch('/api/drink/plot');
-		const plot = await res.json();
-		return {plot: plot};
-	}
-</script>
-
 <svelte:head>
 	<title>Drinking Accelerometer Plot</title>
 	<script src="/plotly-latest.min.js" type="text/javascript"></script>
 </svelte:head>
 
-<div id='plotDiv' class="w-full" style="height: 800px"></div>
-
+<div class="w-full h-screen flex flex-col">
+	<div id='plotDiv' class="w-full" style="height: 800px" bind:this={plot}></div>
+</div>
 <script>
-	export let plot;
+	import {onMount} from "svelte";
 
-	if (typeof window !== 'undefined') {
-		let plotDiv = document.getElementById('plotDiv');
-		Plotly.newPlot(plotDiv, plot, {}, {responsive: true});
-	}
+	let plot;
+
+	onMount(async () => {
+		const res = await fetch('/api/drink/plot')
+		const data = await res.json()
+		Plotly.newPlot(plot, data, {}, {responsive: true});
+	})
 </script>
