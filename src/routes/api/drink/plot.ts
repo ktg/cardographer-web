@@ -29,10 +29,6 @@ export async function get(req: Request, res: Response) {
 			}
 
 			data.push(convertItem(item))
-		} else {
-			console.info(item)
-			console.info(typeof item.x)
-			console.info('x' in item)
 		}
 	})
 
@@ -43,39 +39,38 @@ function convertItem(item) {
 	return {x: item.time, y: item.x + item.y + item.z}
 }
 
-function createLine(chart, data, name: string, colour: string) {
-	if (data.length > 1) {
-		const lineSegments = []
-		let currentSegment = []
-		let prev = data[0].x
-		data.forEach((item) => {
-			if (Math.abs(prev - item.x) >= 1000) {
-				lineSegments.push(simplify(currentSegment, 0.02, false))
-				currentSegment = []
-			}
-			currentSegment.push(item)
-			prev = item.x
-		});
+function createLine(lines, data, name: string, colour: string) {
+	console.log(data)
+	const lineSegments = []
+	let currentSegment = []
+	let prev = data[0].x
+	data.forEach((item) => {
+		if (Math.abs(prev - item.x) >= 1000) {
+			lineSegments.push(simplify(currentSegment, 0.02, false))
+			currentSegment = []
+		}
+		currentSegment.push(item)
+		prev = item.x
+	});
 
-		let line = {
-			x: [],
-			y: [],
-			mode: 'lines',
-			name: name,
-			line: {
-				color: colour,
-				width: 1
-			}
-		};
-		lineSegments.forEach((segment) => {
-			segment.forEach((point) => {
-				line.x.push(new Date(point.x).toISOString());
-				line.y.push(point.y);
+	let line = {
+		x: [],
+		y: [],
+		mode: 'lines',
+		name: name,
+		line: {
+			color: colour,
+			width: 1
+		}
+	};
+	lineSegments.forEach((segment) => {
+		segment.forEach((point) => {
+			line.x.push(new Date(point.x).toISOString());
+			line.y.push(point.y);
 
-			})
-			line.x.push(null);
-			line.y.push(null);
-		});
-		chart.push(line);
-	}
+		})
+		line.x.push(null);
+		line.y.push(null);
+	});
+	lines.push(line);
 }
