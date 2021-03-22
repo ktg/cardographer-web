@@ -7,29 +7,29 @@ export async function get(req: Request, res: Response) {
 
 	let lines = []
 	let data = []
-	let prev = {
-		device: '',
-		tag: ''
-	}
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
 		if ('x' in item) {
-			if (item.device !== prev.device || item.tag != prev.tag) {
-				if (prev.device == item.device) {
-					data.push(convertItem(prev))
-				}
-				if (prev.tag == 'drink') {
-					createLine(lines, data, prev.device + " Drinking", '#282')
-				} else {
-					createLine(lines, data, prev.device, '#558')
-				}
+			if (data.length > 0) {
+				const prev = data[data.length - 1]
+				if (item.device != prev.device || item.tag != prev.tag) {
+					if (prev.device == item.device) {
+						data.push(convertItem(item))
+					}
+					if (prev.tag == 'drink') {
+						createLine(lines, data, prev.device + " Drinking", '#282')
+					} else {
+						createLine(lines, data, prev.device, '#558')
+					}
 
-				data = []
+					data = []
+				}
+			} else {
+				console.log(item)
 			}
 
 			data.push(convertItem(item))
-			prev = item
 		}
 	});
 
