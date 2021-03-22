@@ -2,7 +2,7 @@
 	export async function preload() {
 		const res = await this.fetch('/api/drink/plot');
 		const plot = await res.json();
-		return {plot};
+		return {plot: plot};
 	}
 </script>
 
