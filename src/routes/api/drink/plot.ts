@@ -14,6 +14,8 @@ export async function get(req: Request, res: Response) {
 			if (data.length > 0) {
 				const prev = data[data.length - 1]
 				console.info("" + item.tag + " == " + prev.tag + " = " + (item.tag != prev.tag) + " / " + (item.tag !== prev.tag))
+				console.info("" + item.device + " == " + prev.device + " = " + (item.device != prev.device) + " / " + (item.device !== prev.device))
+
 				if (item.device != prev.device || item.tag != prev.tag) {
 					if (prev.device == item.device) {
 						data.push(convertItem(item))
