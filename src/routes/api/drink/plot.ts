@@ -12,7 +12,7 @@ export async function get(req: Request, res: Response) {
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
-		if ('x' in item) {
+		if (typeof item.x == "number") {
 			if (item.device != prev.device) {
 				createLine(lines, dataAccelDrink, prev.device + " Drinking", '#282')
 				createLine(lines, dataAccel, prev.device, '#558')
