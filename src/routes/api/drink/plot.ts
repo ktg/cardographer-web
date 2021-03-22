@@ -9,6 +9,7 @@ export async function get(req: Request, res: Response) {
 	let data = []
 
 	result.push({x: 0, device: "end"})
+	console.log(result)
 	result.forEach((item) => {
 		if (typeof item.x === "number") {
 			if (data.length > 0) {
@@ -28,6 +29,10 @@ export async function get(req: Request, res: Response) {
 			}
 
 			data.push(convertItem(item))
+		} else {
+			console.info(item)
+			console.info(typeof item.x)
+			console.info('x' in item)
 		}
 	})
 
