@@ -6,28 +6,28 @@ export async function get(req: Request, res: Response) {
 	const result = await getMongoCollection(req, 'drink').find().sort({"device": 1, "time": 1}).toArray();
 
 	let lines = []
-	let data = []
-	let prev = null
+	let dataAccel = []
+	let dataAccelDrink = []
+	let prev = {device: '', tag: null}
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
-		if (typeof item.x === "number") {
-			if (data.length > 0) {
-				if (item.device != prev.device || item.tag != prev.tag) {
-					if (prev.device == item.device) {
-						data.push(convertItem(item))
-					}
-					if (prev.tag == 'drink') {
-						createLine(lines, data, prev.device + " Drinking", '#282')
-					} else {
-						createLine(lines, data, prev.device, '#558')
-					}
-
-					data = []
-				}
+		if ('x' in item) {
+			if (item.device != prev.device) {
+				createLine(lines, dataAccelDrink, prev.device + " Drinking", '#282')
+				createLine(lines, dataAccel, prev.device, '#558')
+				dataAccel = []
+				dataAccelDrink = []
 			}
 			prev = item
-			data.push(convertItem(item))
+			if (item.tag != prev.tag && dataAccel.length != 0) {
+				dataAccel.push(convertItem(item))
+				dataAccelDrink.push(convertItem(item))
+			} else if (item.tag == 'drink') {
+				dataAccelDrink.push(convertItem(item))
+			} else {
+				dataAccel.push(convertItem(item))
+			}
 		}
 	})
 
