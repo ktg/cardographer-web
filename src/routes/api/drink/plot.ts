@@ -9,7 +9,6 @@ export async function get(req: Request, res: Response) {
 	let data = []
 
 	result.push({x: 0, device: "end"})
-	console.log(result)
 	result.forEach((item) => {
 		if (typeof item.x === "number") {
 			if (data.length > 0) {
@@ -41,7 +40,6 @@ function convertItem(item) {
 }
 
 function createLine(lines, data, name: string, colour: string) {
-	console.log(data)
 	const lineSegments = []
 	let currentSegment = []
 	let prev = data[0].x
