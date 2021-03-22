@@ -8,11 +8,11 @@ function createLine(chart, data, name: string, colour: string) {
 		let currentSegment = []
 		let prev = data[0].x
 		data.forEach((item) => {
-			currentSegment.push(item)
 			if (Math.abs(prev - item.x) >= 1000) {
-				lineSegments.push(simplify(currentSegment, 0.01, false))
+				lineSegments.push(simplify(currentSegment, 0.1, false))
 				currentSegment = []
 			}
+			currentSegment.push(item)
 			prev = item.x
 		});
 
