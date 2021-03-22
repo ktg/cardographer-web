@@ -17,11 +17,10 @@ export async function get(req: Request, res: Response) {
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
-		console.log(item)
 		if ('x' in item) {
 			if (item.device != prev.device) {
-				createLine(lines, dataAccelDrink, prev.device + " Drinking", '#282')
-				createLine(lines, dataAccel, prev.device, '#558')
+				createLine(lines, dataAccelDrink, prev.device + " Drinking", '#192')
+				createLine(lines, dataAccel, prev.device, '#546')
 				dataAccel = []
 				dataAccelDrink = []
 			}
