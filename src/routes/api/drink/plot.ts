@@ -11,6 +11,7 @@ function createLine(chart, data, name: string, colour: string) {
 			currentSegment.push(item)
 			if (Math.abs(prev - item.x) >= 1000) {
 				lineSegments.push(simplify(currentSegment, 0.01, false))
+				currentSegment = []
 			}
 			prev = item.x
 		});

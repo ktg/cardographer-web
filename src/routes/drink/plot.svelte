@@ -6,6 +6,7 @@
 <div class="w-full h-screen flex flex-col">
 	<div id='plotDiv' class="w-full" style="height: 800px" bind:this={plot}></div>
 </div>
+
 <script>
 	import {onMount} from "svelte";
 
