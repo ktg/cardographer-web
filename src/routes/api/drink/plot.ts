@@ -1,10 +1,20 @@
-import simplify from "simplify-js";
 import type {Request, Response} from "express";
+import simplify from "simplify-js";
 import {getMongoCollection} from "../../../shared/db";
 
 function createLine(chart, data, name: string, colour: string) {
 	if (data.length > 1) {
-		const simple = simplify(data, 0.01, false);
+		const lineSegments = []
+		let currentSegment = []
+		let prev = data[0].x
+		data.forEach((item) => {
+			currentSegment.push(item)
+			if (Math.abs(prev - item.x) >= 1000) {
+				lineSegments.push(simplify(currentSegment, 0.01, false))
+			}
+			prev = item.x
+		});
+
 		let line = {
 			x: [],
 			y: [],
@@ -15,15 +25,14 @@ function createLine(chart, data, name: string, colour: string) {
 				width: 1
 			}
 		};
-		let prev = simple[0].x;
-		simple.forEach((item) => {
-			if (Math.abs(prev - item.x) >= 1000) {
-				line.x.push(null);
-				line.y.push(null);
-			}
-			line.x.push(new Date(item.x).toISOString());
-			line.y.push(item.y);
-			prev = item.x;
+		lineSegments.forEach((segment) => {
+			segment.forEach((point) => {
+				line.x.push(new Date(point.x).toISOString());
+				line.y.push(point.y);
+
+			})
+			line.x.push(null);
+			line.y.push(null);
 		});
 		chart.push(line);
 	}
@@ -32,33 +41,30 @@ function createLine(chart, data, name: string, colour: string) {
 export async function get(req: Request, res: Response) {
 	const result = await getMongoCollection(req, 'drink').find().sort({"device": 1, "time": 1}).toArray();
 
-	let data = [];
-	let magdata = [];
-	//let ydata = [];
-	//let zdata = [];
+	let data = []
+	let magdata = []
+	let drinkdata = []
 	let device = "";
 
+	result.push({device: "end"})
 	result.forEach((item) => {
 		if (item.device !== device) {
-			createLine(data, magdata, device, '#534');
-			//createLine(data, ydata, device + " y", '#4B4');
-			//createLine(data, zdata, device + " z", '#44B');
+			createLine(data, magdata, device, '#445')
+			createLine(data, drinkdata, device + " Drinking", '#252')
 
-			magdata = [];
-			//ydata = [];
-			//zdata = [];
+			magdata = []
+			drinkdata = []
 			device = item.device
 		}
 
 		if ('x' in item) {
-			magdata.push({x: item.time, y: Math.abs(item.x) + Math.abs(item.y) + Math.abs(item.z)});
-			//ydata.push({x: item.time, y: item.y});
-			//zdata.push({x: item.time, y: item.z});
+			if (item.tag == "drink") {
+				drinkdata.push({x: item.time, y: item.x + item.y + item.z})
+			} else {
+				magdata.push({x: item.time, y: item.x + item.y + item.z})
+			}
 		}
 	});
-	createLine(data, magdata, device, '#534');
-	//createLine(data, ydata, device + " y", '#4B4');
-	//createLine(data, zdata, device + " z", '#44B');
 
-	res.json(data);
+	res.json(data)
 }
