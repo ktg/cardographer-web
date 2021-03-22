@@ -25,15 +25,13 @@ export async function get(req: Request, res: Response) {
 
 					data = []
 				}
-			} else {
-				console.log(item)
 			}
 
 			data.push(convertItem(item))
 		}
-	});
+	})
 
-	res.json(data)
+	res.json(lines)
 }
 
 function convertItem(item) {
