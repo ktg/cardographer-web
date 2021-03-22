@@ -1,4 +1,4 @@
-import type {Request, Response, NextFunction} from "express";
+import type {NextFunction, Request, Response} from "express";
 import {getMongoCollection} from "../../../shared/db";
 
 export async function get(req: Request, res: Response, next: NextFunction) {
