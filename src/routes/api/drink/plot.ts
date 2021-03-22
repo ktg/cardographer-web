@@ -10,11 +10,11 @@ export async function get(req: Request, res: Response) {
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
-		if ('x' in item) {
+		if (typeof item.x === "number") {
 			if (data.length > 0) {
 				const prev = data[data.length - 1]
-				if (item.device != prev.device || item.tag != prev.tag) {
-					if (prev.device == item.device) {
+				if (item.device !== prev.device || item.tag !== prev.tag) {
+					if (prev.device === item.device) {
 						data.push(convertItem(item))
 					}
 					if (prev.tag == 'drink') {
