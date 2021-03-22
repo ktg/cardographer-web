@@ -9,7 +9,7 @@ function createLine(chart, data, name: string, colour: string) {
 		let prev = data[0].x
 		data.forEach((item) => {
 			if (Math.abs(prev - item.x) >= 1000) {
-				lineSegments.push(simplify(currentSegment, 0.1, false))
+				lineSegments.push(simplify(currentSegment, 0.02, false))
 				currentSegment = []
 			}
 			currentSegment.push(item)
@@ -50,8 +50,8 @@ export async function get(req: Request, res: Response) {
 	result.push({device: "end"})
 	result.forEach((item) => {
 		if (item.device !== device) {
-			createLine(data, magdata, device, '#445')
-			createLine(data, drinkdata, device + " Drinking", '#252')
+			createLine(data, magdata, device, '#558')
+			createLine(data, drinkdata, device + " Drinking", '#282')
 
 			magdata = []
 			drinkdata = []
