@@ -50,7 +50,7 @@ function createLine(lines, data: Array<Point>, name: string, colour: string) {
 		let prev = data[0].x
 		data.forEach((item) => {
 			if (Math.abs(prev - item.x) >= 1000) {
-				lineSegments.push(simplify(currentSegment, 0.02, false))
+				lineSegments.push(simplify(currentSegment, 0.01, false))
 				currentSegment = []
 			}
 			currentSegment.push(item)
