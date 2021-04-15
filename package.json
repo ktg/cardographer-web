@@ -7,7 +7,7 @@
 		"build": "sapper build",
 		"export": "sapper export",
 		"start": "node __sapper__/build",
-		"prepare": "node scripts/prepareJson.js"
+		"prepareData": "node scripts/prepareJson.js"
 	},
 	"dependencies": {
 		"abort-controller": "^3.0.0",
