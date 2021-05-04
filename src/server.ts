@@ -27,10 +27,13 @@ const upload = multer({
 	})
 });
 
-app.use(['/api/', '/images/'], cors());
-app.use(express.static('static'));
+app.use('/api/', cors())
+app.use('/images/', cors({
+	exposedHeaders: ['ETag']
+}))
+app.use(express.static('static'))
 app.use(uploadUri, express.static(uploadDir))
-app.use(express.json());
+app.use(express.json())
 app.use('/api/wetlands/sightings', upload.single('image'))
 app.use(session({
 	secret: 'cardiosquirrel',
