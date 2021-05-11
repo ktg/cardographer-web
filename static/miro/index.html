@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://miro.com/app/static/sdk.1.1.js"></script>
+	<script defer>
+		const icon = '<g><path d="M24,3H8A1,1,0,0,0,7,4V28a1,1,0,0,0,1,1H24a1,1,0,0,0,1-1V4A1,1,0,0,0,24,3ZM23,27H9V5H23Z"/><path d="M11,9a1,1,0,0,0,1-1V7a1,1,0,0,0-2,0V8A1,1,0,0,0,11,9Z"/><path d="M20,24v1a1,1,0,0,0,2,0V24a1,1,0,0,0-2,0Z"/><path d="M15.17,9.45h0l-4,6h0a.82.82,0,0,0-.15.36A1.21,1.21,0,0,0,11,16a1.21,1.21,0,0,0,0,.19.82.82,0,0,0,.15.36h0l4,6h0a.75.75,0,0,0,.25.25s0,0,0,0l0,0,.18.08.08,0A1,1,0,0,0,16,23h0a1,1,0,0,0,.25,0l.08,0,.18-.08,0,0s0,0,0,0a.75.75,0,0,0,.25-.25h0l4-6h0a.82.82,0,0,0,.15-.36A1.21,1.21,0,0,0,21,16a1.21,1.21,0,0,0,0-.19.82.82,0,0,0-.15-.36h0l-4-6h0a.62.62,0,0,0-.14-.14.62.62,0,0,0-.14-.14h0A.82.82,0,0,0,16.19,9h-.38a.82.82,0,0,0-.36.15h0l0,.05a.72.72,0,0,0-.23.23ZM18.8,16,16,20.2,13.2,16,16,11.8Z"/></g>'
+
+		miro.onReady(() => {
+			miro.initialize({
+				extensionPoints: {
+					exportMenu: {
+						title: 'Export to Cardographer',
+						svgIcon: icon,
+						onClick: async () => {
+							const objects = await miro.board.widgets.get()
+							console.log(objects)
+						},
+					},
+				},
+			})
+		})
+	</script>
+</head>
+</html>
