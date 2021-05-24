@@ -1,0 +1,26 @@
+[
+{ "name": "Motivations", 
+	"atlasCount" : 1, 
+	"atlasURLs" : ["https://cardographer.cs.nott.ac.uk/images/Visitorbox/Atlas_Motivations.png"],
+	"cardCount" : 20,
+	"cardX": 4,
+	"cardY": 5,
+	"cardInfo": ["Aesthetic Pleasure", "Cultural Identity", "Curiosity", "Nostalgia", "Personal Relevance", "Time Travel", "To be moved", "Wonder", "Academic Interest", "Self Improvement","Stimulate the Children", "Comfort and Warmth", "Entertainment", "Inclusion", "Social Interaction", "To make and do","Contemplation", "Escapism", "Stimulation"]
+},
+{ "name": "Assets", 
+	"atlasCount": 1, 
+	"atlasURLs": ["https://cardographer.cs.nott.ac.uk/images/Visitorbox/Atlas_Assets.png"],
+	"cardCount": 10,
+	"cardX": 2,
+	"cardY": 5,
+	"cardInfo": ["? - Assets", "Digital Resource", "Exhibits", "Fame", "Guides", "Learning Activity", "Location", "Outreach Activity", "Retail"]
+},
+{ "name": "Audiences", 
+	"atlasCount" : 1, 
+	"atlasURLs" : ["https://cardographer.cs.nott.ac.uk/images/Visitorbox/Atlas_Audiences.png"],
+	"cardCount" : 5,
+	"cardX": 3,
+	"cardY": 2,
+	"cardInfo": ["? - Audience 1", "? - Audience 2", "? - Audience 3", "? - Audience 4", "? - Audience 5"]
+}
+]

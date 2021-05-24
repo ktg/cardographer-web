@@ -8,14 +8,6 @@
 		miro.onReady(() => {
 			miro.initialize({
 				extensionPoints: {
-					exportMenu: {
-						title: 'Export to Cardographer',
-						svgIcon: icon,
-						onClick: async () => {
-							const objects = await miro.board.widgets.get()
-							console.log(objects)
-						},
-					},
 					bottomBar: {
 						title: 'Export to Cardographer',
 						svgIcon: icon,
