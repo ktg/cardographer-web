@@ -1,7 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+	<style>
+        .title {
+            padding: 0 16px;
+            line-height: 48px;
+            color: rgba(5, 0, 56, 1);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-family: Formular, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .imageItem {
+            padding: 8px;
+            cursor: pointer;
+            font-family: Formular, sans-serif;
+        }
+
+        .imageItem:hover {
+
+        }
+	</style>
+</head>
 <body>
-<div class="rtb-sidebar-caption">Cardographer Upload</div>
+<div class="title">Cardographer Upload</div>
 <div id="warning"></div>
 <div id="missingTitles">
 </div>
@@ -35,6 +60,7 @@
 			untitled.forEach((image) => {
 				const imageElement = document.createElement('div')
 				imageElement.innerText = 'Image ' + image.id
+				imageElement.classList.add('imageItem')
 				imageElement.addEventListener('click', async () => {
 					await miro.board.selection.selectWidgets(image.id)
 				})
