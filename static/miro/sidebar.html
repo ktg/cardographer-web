@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div class="rtb-sidebar-caption">Cardographer Upload</div>
+<div id="warning"></div>
+<div id="missingTitles">
+</div>
+<button id="upload">Upload</button>
+<script src="https://miro.com/app/static/sdk.1.1.js"></script>
+<script defer>
+	miro.onReady(() => {
+		miro.addListener(miro.enums.event.SELECTION_UPDATED, getWidget)
+		getWidget()
+	})
+
+	document.getElementById('upload').addEventListener('click', () => {
+		upload()
+	})
+
+	const imageList = document.getElementById('missingTitles')
+	const warning = document.getElementById('warning')
+
+	async function getWidget() {
+		const objects = await miro.board.widgets.get()
+
+		console.log(objects)
+		const untitled = objects
+			.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
+
+		if (untitled.length > 0) {
+			warning.innerText = untitled.length + " images need titles before uploading"
+			warning.style.opacity = '1'
+
+			imageList.innerHTML = ''
+			untitled.forEach((image) => {
+				const imageElement = document.createElement('div')
+				imageElement.innerText = 'Image ' + image.id
+				imageElement.addEventListener('click', async () => {
+					await miro.board.selection.selectWidgets(image.id)
+				})
+
+				imageList.append(imageElement)
+			})
+
+		} else {
+			warning.style.opacity = '0'
+			imageList.innerHTML = ''
+		}
+	}
+
+	async function upload() {
+
+	}
+</script>
+</body>
+</html>

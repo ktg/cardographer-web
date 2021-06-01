@@ -7,28 +7,13 @@
 		let timer = null
 
 		miro.onReady(() => {
-			const snack = document.createElement("div")
-			document.body.append(snack)
-
 			miro.initialize({
 				extensionPoints: {
 					bottomBar: {
-						title: 'Export to Cardographer',
+						title: 'Cardographer Upload',
 						svgIcon: icon,
 						onClick: async () => {
-							const objects = await miro.board.widgets.get()
-
-							console.log(objects)
-							const untitled = objects
-								.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
-								.map((widget) => widget.id)
-							if (untitled.length !== 0) {
-								await miro.board.selection.selectWidgets(untitled.slice(0,1))
-								snack.innerText = untitled.length + " Images Require Titles"
-								// TODO Alert
-							} else {
-								// TODO Export
-							}
+							miro.board.ui.openLeftSidebar('./sidebar.html')
 						},
 					},
 				},
