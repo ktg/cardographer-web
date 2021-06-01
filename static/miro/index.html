@@ -4,8 +4,12 @@
 	<script src="https://miro.com/app/static/sdk.1.1.js"></script>
 	<script defer>
 		const icon = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>'
+		let timer = null
 
 		miro.onReady(() => {
+			const snack = document.createElement("div")
+			document.body.append(snack)
+
 			miro.initialize({
 				extensionPoints: {
 					bottomBar: {
@@ -13,12 +17,14 @@
 						svgIcon: icon,
 						onClick: async () => {
 							const objects = await miro.board.widgets.get()
+
 							console.log(objects)
 							const untitled = objects
 								.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
 								.map((widget) => widget.id)
 							if (untitled.length !== 0) {
-								await miro.board.selection.selectWidgets(untitled)
+								await miro.board.selection.selectWidgets(untitled.slice(0,1))
+								snack.innerText = untitled.length + " Images Require Titles"
 								// TODO Alert
 							} else {
 								// TODO Export
