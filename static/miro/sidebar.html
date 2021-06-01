@@ -11,7 +11,15 @@
             overflow: hidden;
             font-family: Formular, sans-serif;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: bold;
+        }
+
+        #warning {
+            font-family: Formular, sans-serif;
+            background: khaki;
+            padding: 8px;
+            margin: 8px;
+            font-weight: bold;
         }
 
         .imageItem {
@@ -46,10 +54,8 @@
 	const warning = document.getElementById('warning')
 
 	async function getWidget() {
-		const objects = await miro.board.widgets.get()
-
-		console.log(objects)
-		const untitled = objects
+		const untitled = await miro.board.widgets
+			.get()
 			.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
 
 		if (untitled.length > 0) {
@@ -63,6 +69,7 @@
 				imageElement.classList.add('imageItem')
 				imageElement.addEventListener('click', async () => {
 					await miro.board.selection.selectWidgets(image.id)
+					await miro.board.viewport.set(image.bounds)
 				})
 
 				imageList.append(imageElement)
