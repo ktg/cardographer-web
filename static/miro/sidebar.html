@@ -1,45 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>Cardographer Upload</title>
 	<style>
-        .title {
-            padding: 0 16px;
-            line-height: 48px;
-            color: rgba(5, 0, 56, 1);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            font-family: Formular, sans-serif;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
         #warning {
-            font-family: Formular, sans-serif;
             background: khaki;
             padding: 8px;
             margin: 8px;
             font-weight: bold;
 	        opacity: 0;
+	        border-radius: 5px;
         }
 
         .imageItem {
-            padding: 8px;
+            padding: 8px 16px;
             cursor: pointer;
-            font-family: Formular, sans-serif;
+	        opacity: 1;
+	        transition: opacity 0.5s;
         }
 
         .imageItem:hover {
-
+			opacity: 0.5;
         }
 	</style>
+	<link rel="stylesheet" href="https://miro.com/app/static/styles.1.0.css"/>
 </head>
 <body>
-<div class="title">Cardographer Upload</div>
-<div id="warning"></div>
-<div id="missingTitles">
-</div>
+<div class="miro-h2">Cardographer Upload</div>
 <button id="upload">Upload</button>
+<div id="warning" class="miro-p-large"></div>
+<div id="missingTitles" class="miro-p-medium">
+</div>
 <script src="https://miro.com/app/static/sdk.1.1.js"></script>
 <script defer>
 	miro.onReady(() => {
@@ -59,7 +50,11 @@
 		const untitled = widgets.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
 
 		if (untitled.length > 0) {
-			warning.innerText = untitled.length + " images need titles before uploading"
+			if(untitled.length === 1) {
+				warning.innerText = "1 image needs a title before uploading:"
+			} else {
+				warning.innerText = untitled.length + " images need titles before uploading:"
+			}
 			warning.style.opacity = '1'
 
 			imageList.innerHTML = ''
