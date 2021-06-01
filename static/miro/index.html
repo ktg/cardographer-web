@@ -3,7 +3,7 @@
 <head>
 	<script src="https://miro.com/app/static/sdk.1.1.js"></script>
 	<script defer>
-		const icon = '<g><path d="M24,3H8A1,1,0,0,0,7,4V28a1,1,0,0,0,1,1H24a1,1,0,0,0,1-1V4A1,1,0,0,0,24,3ZM23,27H9V5H23Z"/><path d="M11,9a1,1,0,0,0,1-1V7a1,1,0,0,0-2,0V8A1,1,0,0,0,11,9Z"/><path d="M20,24v1a1,1,0,0,0,2,0V24a1,1,0,0,0-2,0Z"/><path d="M15.17,9.45h0l-4,6h0a.82.82,0,0,0-.15.36A1.21,1.21,0,0,0,11,16a1.21,1.21,0,0,0,0,.19.82.82,0,0,0,.15.36h0l4,6h0a.75.75,0,0,0,.25.25s0,0,0,0l0,0,.18.08.08,0A1,1,0,0,0,16,23h0a1,1,0,0,0,.25,0l.08,0,.18-.08,0,0s0,0,0,0a.75.75,0,0,0,.25-.25h0l4-6h0a.82.82,0,0,0,.15-.36A1.21,1.21,0,0,0,21,16a1.21,1.21,0,0,0,0-.19.82.82,0,0,0-.15-.36h0l-4-6h0a.62.62,0,0,0-.14-.14.62.62,0,0,0-.14-.14h0A.82.82,0,0,0,16.19,9h-.38a.82.82,0,0,0-.36.15h0l0,.05a.72.72,0,0,0-.23.23ZM18.8,16,16,20.2,13.2,16,16,11.8Z"/></g>'
+		const icon = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>'
 
 		miro.onReady(() => {
 			miro.initialize({
@@ -17,7 +17,7 @@
 							const untitled = objects
 								.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
 								.map((widget) => widget.id)
-							if(untitled.length !== 0) {
+							if (untitled.length !== 0) {
 								await miro.board.selection.selectWidgets(untitled)
 								// TODO Alert
 							} else {
