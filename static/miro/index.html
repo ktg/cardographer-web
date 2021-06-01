@@ -14,6 +14,15 @@
 						onClick: async () => {
 							const objects = await miro.board.widgets.get()
 							console.log(objects)
+							const untitled = objects
+								.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
+								.map((widget) => widget.id)
+							if(untitled.length !== 0) {
+								await miro.board.selection.selectWidgets(untitled)
+								// TODO Alert
+							} else {
+								// TODO Export
+							}
 						},
 					},
 				},
