@@ -64,7 +64,13 @@
 				imageElement.classList.add('imageItem')
 				imageElement.addEventListener('click', async () => {
 					await miro.board.selection.selectWidgets(image.id)
-					await miro.board.viewport.set(image.bounds)
+					const rect = {
+						x: image.bounds.left,
+						y: image.bounds.top,
+						width: image.bounds.right - image.bounds.left,
+						height: image.bounds.bottom - image.bounds.top
+					}
+					await miro.board.viewport.set(rect)
 				})
 
 				imageList.append(imageElement)
