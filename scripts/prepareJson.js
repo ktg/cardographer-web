@@ -39,7 +39,7 @@ async function prepare() {
 }
 
 async function writeSession(device, drink, session, hand) {
-	if (session != null && session.lines.count !== 0) {
+	if (session != null && session.lines.length > 20) {
 		session.lines.forEach((line) => {
 			if (line.time - session.timestamp > 1000) {
 				if (session.file != null) {
