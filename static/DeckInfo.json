@@ -22,7 +22,7 @@
 },
 { "name": "BuildingBlocks",  
 	"atlasURLs" : ["https://cardographer.cs.nott.ac.uk/images/Visitorbox/Atlas_BuildingBlocks_1.png", "https://cardographer.cs.nott.ac.uk/images/Visitorbox/Atlas_BuildingBlocks_2.png"],
-	"cardCount" : 69,
+	"cardCount" : 67,
 	"cardX": [8, 5],
 	"cardY": [8, 4],
 	"cardInfo": ["Anywhere", "Fitting Locations", "Hidden Locations", "Hopping", "Offline", "Online", "Outdoors", "Subverted Locations", "Transport", "Adoption", "Appointment", "Beginning & End", "Caches", "Check-In", "Citizen Science", "Collect", "Criticism", "Crowd Sourcing", "Decision", "Episodes", "Gatekeepers", "Gifting", "Invite Imitation", "Marketplace", "Mob", "Persona", "Pressure", "Q&A", "Reward", "Seamful Design", "Storytelling", "Volunteers", "Gestures", "Hacking & Crafting", "Hands On", "Low Tech", "Technical Artifacts", "Authenticity", "Bio-Sensing", "Haptic Feedback", "Motion Tracking", "Personal Soundtrack", "Blurred Boundaries", "Collaboration", "Competition", "Networked", "New Aquaintances", "Outreach", "2D Scanning", "3D Printing", "Audio", "Augmented Reality", "Biometrics", "Instant Messaging", "Intelligent Assistant", "Linked Data", "Paper", "Photography", "Projection", "Proximity", "Public Displays", "Shop", "Social Media", "Telephony", "Video", "Virtual Reality", "Virtual Markers"]
