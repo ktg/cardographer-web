@@ -23,6 +23,7 @@ async function prepare() {
 			}
 			if (!(session in sessions)) {
 				sessions[session] = {
+					"writeCount": 0,
 					"count": 0,
 					"timestamp": 0,
 					"lines": []
@@ -39,19 +40,24 @@ async function prepare() {
 }
 
 async function writeSession(device, drink, session, hand) {
-	if (session != null && session.lines.length > 20) {
+	if (session) {
 		session.lines.forEach((line) => {
-			if (line.time - session.timestamp > 1000) {
+			if (line.time - session.timestamp > 500) {
 				if (session.file != null) {
 					fs.closeSync(session.file)
+					if (session.writeCount < 25) {
+						fs.rmSync(session.filename)
+						session.count--
+					}
 				}
-				session.count++;
-				let filename = "sessions/notDrinking/" + device + "_" + session.count + ".csv"
+				session.writeCount = 0
+				session.count++
+				session.filename = "sessions/notDrinking/" + device + "_" + session.count + ".csv"
 				if (drink) {
-					filename = "sessions/drinking/" + device + "_" + session.count + ".csv"
+					session.filename = "sessions/drinking/" + device + "_" + session.count + ".csv"
 				}
 
-				session.file = fs.openSync(filename, 'w')
+				session.file = fs.openSync(session.filename, 'w')
 				fs.writeSync(session.file, "timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, right_hand\n")
 			}
 			fs.writeSync(session.file, [
@@ -62,6 +68,7 @@ async function writeSession(device, drink, session, hand) {
 			].join(", "))
 			fs.writeSync(session.file, "\n")
 			session.timestamp = line.time
+			session.writeCount++
 		})
 		session.lines = []
 	}
