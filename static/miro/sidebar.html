@@ -8,27 +8,37 @@
             padding: 8px;
             margin: 8px;
             font-weight: bold;
-	        opacity: 0;
-	        border-radius: 5px;
+            opacity: 0;
+            border-radius: 5px;
+        }
+
+        #upload {
+            margin: 8px 32px;
+            border-radius: 5px;
+            border: 0;
+            padding: 8px;
+            background: rgba(66, 98, 255, 1);
+            color: white;
+            font-weight: bold;
         }
 
         .imageItem {
             padding: 8px 16px;
             cursor: pointer;
-	        opacity: 1;
-	        transition: opacity 0.5s;
+            opacity: 1;
+            transition: opacity 0.5s;
         }
 
         .imageItem:hover {
-			opacity: 0.5;
+            opacity: 0.5;
         }
 	</style>
 	<link rel="stylesheet" href="https://miro.com/app/static/styles.1.0.css"/>
 </head>
-<body>
-<div class="miro-h2">Cardographer Upload</div>
+<body style="display: flex; flex-direction: column">
+<div class="miro-h2" style="padding: 16px">Cardographer Upload</div>
 <button id="upload">Upload</button>
-<div id="warning" class="miro-p-large"></div>
+<div id="warning" class="miro-p-large" style="overflow-y: scroll"></div>
 <div id="missingTitles" class="miro-p-medium">
 </div>
 <script src="https://miro.com/app/static/sdk.1.1.js"></script>
@@ -50,10 +60,10 @@
 		const untitled = widgets.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
 
 		if (untitled.length > 0) {
-			if(untitled.length === 1) {
+			if (untitled.length === 1) {
 				warning.innerText = "1 image needs a title before uploading:"
 			} else {
-				warning.innerText = untitled.length + " images need titles before uploading:"
+				warning.innerText = untitled.length + " images need a title before uploading:"
 			}
 			warning.style.opacity = '1'
 
@@ -64,11 +74,13 @@
 				imageElement.classList.add('imageItem')
 				imageElement.addEventListener('click', async () => {
 					await miro.board.selection.selectWidgets(image.id)
+					const width = image.bounds.right - image.bounds.left
+					const height = image.bounds.bottom - image.bounds.top
 					const rect = {
-						x: image.bounds.left,
-						y: image.bounds.top,
-						width: image.bounds.right - image.bounds.left,
-						height: image.bounds.bottom - image.bounds.top
+						x: image.bounds.left - (width / 2),
+						y: image.bounds.top - (height / 2),
+						width: width * 2,
+						height: height * 2
 					}
 					await miro.board.viewport.set(rect)
 				})
