@@ -1,8 +1,9 @@
-import type {Request, Response} from "express";
-import {getMongoCollection} from "../../../shared/db";
+import {getDb} from "$lib/db";
+import type {EndpointOutput, Request} from "@sveltejs/kit";
 
-export async function post(req: Request, res: Response) {
-	let dumpDoc = req.body;
-	await getMongoCollection(req, 'xSpace').insertMany(dumpDoc);
-	res.json({"result": "success"});
+export async function post(req: Request): Promise<EndpointOutput> {
+	let dumpDoc = req.body
+	const db = await getDb()
+	await db.collection('xSpace').insertMany(dumpDoc)
+	return {body: {"result": "success"}}
 }

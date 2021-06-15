@@ -15,8 +15,16 @@ services:
         volumes:
             - db:/data/db
 
+    mongo-express:
+        image: mongo-express
+        restart: unless-stopped
+        depends_on:
+            - mongo
+        ports:
+            - "8081:8081"
+
     sync:
-        build: docker/sync
+        build: src/docker/sync
         restart: unless-stopped
         volumes:
             - ./src:/dev/src/:consistent
@@ -24,18 +32,16 @@ services:
             - src:/app/src
             - static:/app/static
 
-
     server:
         build:
             context: .
-            dockerfile: Dockerfile.dev
+            dockerfile: src/docker/dev/Dockerfile
         restart: unless-stopped
         depends_on:
             - 'mongo'
         ports:
             - "3000:3000"
-            - "10000:10000"
+            - "24678:24678"
         volumes:
-            - uploads:/app/uploads
             - src:/app/src
             - static:/app/static

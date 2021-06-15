@@ -1,19 +1,20 @@
-import type {Request, Response} from "express";
-import {getMongoCollection} from "../../../shared/db";
+import {getDb} from "$lib/db";
+import type {EndpointOutput, Request} from "@sveltejs/kit";
 
-export async function post(req: Request, res: Response) {
-	const dataSet = req.body;
+export async function post(req: Request): Promise<EndpointOutput> {
+	const dataSet = req.body as any
 	if (Array.isArray(dataSet.data) && typeof dataSet.device === 'string') {
 		const device = dataSet.device.slice(-5);
 		dataSet.data.forEach((item) => {
 			item.device = device;
 		});
-		const collection = getMongoCollection(req, 'drink');
-		await collection.insertMany(dataSet.data);
+		const db = await getDb()
+		const collection = await db.collection('drink')
+		await collection.insertMany(dataSet.data)
 		delete dataSet.data;
-		const result = await collection.insertOne(dataSet);
-		res.json({"result": "success", "insertedId": result.insertedId});
+		const result = await collection.insertOne(dataSet)
+		return {body: {"result": "success", "insertedId": result.insertedId}}
 	} else {
-		res.status(400).send("Missing Parameters");
+		return {status: 400, body: "Missing Parameters"}
 	}
 }

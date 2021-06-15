@@ -1,14 +1,15 @@
+import {getDb} from "$lib/db";
+import type {EndpointOutput, Request} from "@sveltejs/kit";
 import {ObjectId} from 'mongodb';
-import type {Request, Response, NextFunction} from "express";
-import {getMongoCollection} from "../../../shared/db";
 
-export async function get(req: Request, res:Response, next: NextFunction) {
-	const { id } = req.params;
+export async function get(req: Request): Promise<EndpointOutput> {
+	const {id} = req.params;
 
-	let result = await getMongoCollection(req, 'dump').findOne({'_id': new ObjectId(id)});
-	if(result !== null) {
-		res.json(result);
+	const db = await getDb()
+	const result = await db.collection('dump').findOne({'_id': new ObjectId(id)});
+	if (result !== null) {
+		return {body: result}
 	} else {
-		next();
+		return null
 	}
 }

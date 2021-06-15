@@ -1,10 +1,11 @@
-import type {NextFunction, Request, Response} from "express";
-import {getMongoCollection} from "../../../shared/db";
+import {getDb} from "$lib/db";
+import type {EndpointOutput} from "@sveltejs/kit";
 
-export async function get(req: Request, res: Response, next: NextFunction) {
-	const result = await getMongoCollection(req, 'drink').find().toArray();
+export async function get(): Promise<EndpointOutput> {
+	const db = await getDb()
+	const result = await db.collection('drink').find().toArray();
 	result.forEach((item) => {
 		delete item._id;
-	});
-	res.json(result);
+	})
+	return {body: result}
 }

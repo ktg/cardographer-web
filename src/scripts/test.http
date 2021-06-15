@@ -1,0 +1,187 @@
+POST http://localhost:3000/api/xSpace
+Content-Type: application/json
+
+[
+	{
+		"_id": "608181a3765a570012024a48",
+		"heartRate": 71,
+		"restingHeartRate": 0,
+		"altitude": 33.799049377441406,
+		"type": "Transparency",
+		"timestamp": 1619100030398,
+		"longitude": -1.1961790546786004,
+		"room": "Study",
+		"valence": 3,
+		"arousal": 1,
+		"version": "0.6.1",
+		"accuracy": 30,
+		"latitude": 52.955992352266755,
+		"deviceId": "4CFC8F4A-A368-4B95-88C5-0F079FD87E07"
+	},
+	{
+		"_id": "608181a3765a570012024a49",
+		"heartRate": 71,
+		"restingHeartRate": 0,
+		"altitude": 33.798866271972656,
+		"type": "Openness",
+		"timestamp": 1619100048598,
+		"longitude": -1.1961790546786004,
+		"room": "Study",
+		"valence": 3,
+		"arousal": 1,
+		"version": "0.6.1",
+		"accuracy": 30,
+		"latitude": 52.955992352266755,
+		"deviceId": "4CFC8F4A-A368-4B95-88C5-0F079FD87E07"
+	},
+	{
+		"_id": "608181a3765a570012024a4a",
+		"heartRate": 73,
+		"restingHeartRate": 0,
+		"altitude": 33.796546936035156,
+		"type": "Temperature",
+		"timestamp": 1619100056611,
+		"longitude": -1.1961790546786004,
+		"room": "Study",
+		"valence": 3,
+		"arousal": 3,
+		"version": "0.6.1",
+		"accuracy": 50,
+		"latitude": 52.955992352266755,
+		"deviceId": "4CFC8F4A-A368-4B95-88C5-0F079FD87E07"
+	}
+]
+
+###
+POST http://localhost:3000/api/dump
+Content-Type: application/json
+
+{
+	"data": "some data"
+}
+
+###
+# Local Drink Upload
+
+POST http://localhost:3000/api/drink
+Content-Type: application/json
+
+{
+	"data": [
+		{
+			"x": -0.005292,
+			"y": -0.000299,
+			"rz": 0.032704,
+			"z": 0.003388,
+			"rx": -0.021806,
+			"time": 1622880883260,
+			"tag": "drink",
+			"ry": 0.010571,
+			"device": "4878A"
+		},
+		{
+			"x": 0.022865,
+			"y": -0.004584,
+			"rz": -0.056285,
+			"z": 0.033168,
+			"rx": -0.098356,
+			"time": 1622880883360,
+			"ry": 0.019723,
+			"device": "4878A"
+		},
+		{
+			"x": 0.001815,
+			"y": -0.005404,
+			"rz": 0.069125,
+			"z": 0.002159,
+			"rx": 0.067226,
+			"time": 1622880883459,
+			"ry": -0.034447,
+			"device": "4878A"
+		},
+		{
+			"x": 0.001866,
+			"y": -0.017965,
+			"rz": 0.004961,
+			"z": -0.005652,
+			"rx": -0.013426,
+			"time": 1622880883559,
+			"ry": -0.035965,
+			"device": "4878A"
+		},
+		{
+			"x": -0.00501,
+			"y": -0.0105,
+			"rz": 0.034898,
+			"z": 0.011198,
+			"rx": -0.00641,
+			"time": 1622880883659,
+			"ry": -0.000197,
+			"device": "4878A"
+		},
+		{
+			"x": 0.006387,
+			"y": -0.014367,
+			"rz": 0.029037,
+			"z": 0.01258,
+			"rx": -0.174621,
+			"time": 1622880883758,
+			"ry": -0.050937,
+			"device": "4878A"
+		},
+		{
+			"x": -0.000432,
+			"y": -0.003409,
+			"rz": 0.00942,
+			"z": -0.000051,
+			"rx": -0.030579,
+			"time": 1622880883858,
+			"ry": -0.02944,
+			"device": "4878A"
+		},
+		{
+			"x": -0.000669,
+			"y": -0.011703,
+			"rz": 0.016144,
+			"z": 0.007869,
+			"rx": -0.056998,
+			"time": 1622880883958,
+			"ry": 0.047338,
+			"device": "4878A"
+		},
+		{
+			"x": 0.005306,
+			"y": -0.002467,
+			"rz": 0.00079,
+			"z": -0.00533,
+			"rx": 0.021542,
+			"time": 1622880884058,
+			"ry": -0.006248,
+			"device": "4878A"
+		},
+		{
+			"x": 0.012255,
+			"y": 0.063754,
+			"rz": 0.071828,
+			"z": -0.048782,
+			"rx": -0.017202,
+			"time": 1622880884157,
+			"ry": -0.023185,
+			"device": "4878A"
+		}
+	],
+	"device": "ACAD04AB-5390-43E1-905F-B4BEDE14878A",
+	"time": 1622880884214,
+	"hand": "right",
+	"location": {
+		"time": 1622880882984,
+		"lat": 52.986766313,
+		"alt": 75,
+		"lon": -1.137706232,
+		"acc": 32.004,
+		"speed": 0
+	},
+	"version": "0.3.0"
+}
+
+###

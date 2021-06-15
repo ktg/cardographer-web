@@ -1,7 +1,7 @@
-import type {Request, Response} from "express";
-import {getMongoCollection} from "../../../shared/db";
+import {getDb} from "$lib/db";
+import type {EndpointOutput} from "@sveltejs/kit";
 
-export async function get(req: Request, res: Response) {
-	const result = await getMongoCollection(req, 'dump').find().toArray()
-	res.json(result);
+export async function get(): Promise<EndpointOutput> {
+	const db = await getDb()
+	return {body: await db.collection('dump').find().toArray()}
 }

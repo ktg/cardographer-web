@@ -1,14 +1,15 @@
-import type {Request, Response} from "express";
-import simplify from "simplify-js";
-import {getMongoCollection} from "../../../shared/db";
+import {getDb} from "$lib/db"
+import type {EndpointOutput} from "@sveltejs/kit"
+import simplify from "simplify-js"
 
 interface Point {
 	x: number,
 	y: number
 }
 
-export async function get(req: Request, res: Response) {
-	const result = await getMongoCollection(req, 'drink').find().sort({"device": 1, "time": 1}).toArray();
+export async function get(): Promise<EndpointOutput> {
+	const db = await getDb()
+	const result = await db.collection('drink').find().sort({"device": 1, "time": 1}).toArray()
 
 	let lines = []
 	let dataAccel: Array<Point> = []
@@ -36,7 +37,7 @@ export async function get(req: Request, res: Response) {
 		}
 	})
 
-	res.json(lines)
+	return {body: lines}
 }
 
 function convertItem(item): Point {
@@ -55,7 +56,7 @@ function createLine(lines, data: Array<Point>, name: string, colour: string) {
 			}
 			currentSegment.push(item)
 			prev = item.x
-		});
+		})
 
 		let line = {
 			x: [],
@@ -66,16 +67,16 @@ function createLine(lines, data: Array<Point>, name: string, colour: string) {
 				color: colour,
 				width: 1
 			}
-		};
+		}
 		lineSegments.forEach((segment) => {
 			segment.forEach((point) => {
-				line.x.push(new Date(point.x).toISOString());
-				line.y.push(point.y);
+				line.x.push(new Date(point.x).toISOString())
+				line.y.push(point.y)
 
 			})
-			line.x.push(null);
-			line.y.push(null);
-		});
-		lines.push(line);
+			line.x.push(null)
+			line.y.push(null)
+		})
+		lines.push(line)
 	}
 }

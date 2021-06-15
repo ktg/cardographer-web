@@ -1,8 +1,9 @@
-import AbortController from "abort-controller";
-import {createDocument} from 'domino';
+
+import type {EndpointOutput} from "@sveltejs/kit";
+import AbortController from "abort-controller"
+import {createDocument} from 'domino'
+import type {Response as FetchResponse} from 'node-fetch'
 import fetch from 'node-fetch';
-import type {Response as FetchResponse} from 'node-fetch';
-import type {Request, Response} from "express";
 
 const escapeHTML = str => str.replace(/[&<>'"]/g,
 	tag => ({
@@ -26,7 +27,7 @@ async function fetchTimeout(url: string, time: number): Promise<FetchResponse> {
 	}
 }
 
-export async function get(req: Request, res: Response) {
+export async function get(): Promise<EndpointOutput> {
 	const response = await fetchTimeout('https://www.myrunningman.com/episodes/newest', 10000);
 	if (response.ok) {
 		const html = await response.text()
@@ -34,22 +35,27 @@ export async function get(req: Request, res: Response) {
 		const links = doc.getElementsByTagName('a')
 		const linkList = Array.prototype.slice.call(links)
 		let previousLink = null
-		res.set('Content-Type', 'text/xml; charset=UTF-8')
-		res.write('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>MyRunningMan Most Recent Episodes</title>')
+		let body = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>MyRunningMan Most Recent Episodes</title>'
 		linkList.forEach((link) => {
 			if (link.href.startsWith('magnet:')) {
-				res.write('<item><title>');
-				res.write(escapeHTML(previousLink.textContent));
-				res.write('</title><link>');
-				res.write(escapeHTML(link.href.replace('magnet://', 'magnet:')));
-				res.write('</link></item>')
+				body += '<item><title>'
+					+ escapeHTML(previousLink.textContent)
+					+ '</title><link>'
+					+ escapeHTML(link.href.replace('magnet://', 'magnet:'))
+					+ '</link></item>'
 			}
 
 			previousLink = link;
-		});
-		res.write('</channel></rss>');
-		res.end();
+		})
+		body += '</channel></rss>'
+
+		return {
+			body: body,
+			headers: {
+				'Content-Type': 'text/xml; charset=UTF-8'
+			}
+		}
 	} else {
-		res.status(response.status).send(response.statusText)
+		return {status: response.status, body: response.statusText}
 	}
 }
