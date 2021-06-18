@@ -1,4 +1,3 @@
-
 import type {EndpointOutput} from "@sveltejs/kit";
 import AbortController from "abort-controller"
 import {createDocument} from 'domino'
