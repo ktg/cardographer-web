@@ -2,7 +2,7 @@ import {getDb} from "$lib/db";
 import type {EndpointOutput, Request} from "@sveltejs/kit";
 
 export async function post(req: Request): Promise<EndpointOutput> {
-	const dataSet = JSON.parse(req.rawBody as string)
+	const dataSet = req.body as any
 	if (Array.isArray(dataSet.data) && typeof dataSet.device === 'string') {
 		const device = dataSet.device.slice(-5);
 		dataSet.data.forEach((item) => {
