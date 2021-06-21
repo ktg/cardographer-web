@@ -3,8 +3,6 @@ import type {EndpointOutput, Request} from "@sveltejs/kit"
 
 export async function post(req: Request): Promise<EndpointOutput> {
 	let dumpDoc = req.body as any
-	console.log(dumpDoc)
-	console.log(JSON.stringify(dumpDoc))
 	const db = await getDb()
 	const result = await db.collection('dump').insertOne(dumpDoc)
 	return {body: {"result": "success", "insertedId": result.insertedId}}
