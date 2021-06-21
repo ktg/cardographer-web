@@ -8,3 +8,5 @@
 
 node_modules/
 __sapper__/
+.svelte-kit/
+build/
