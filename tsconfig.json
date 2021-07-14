@@ -25,6 +25,9 @@
 		"allowJs": true,
 		"checkJs": true,
 		"paths": {
+			"$app/*": [
+				"node_modules/@sveltejs/kit/assets/runtime/app"
+			],
 			"$lib/*": [
 				"src/lib/*"
 			]

@@ -25,7 +25,6 @@ function attemptConnection(resolve: (value: Db) => void, reject): void {
 		})
 }
 
-export async function getDb(): Db {
-	const result = await db
-	return result
+export async function getDb(): Promise<Db> {
+	return await db
 }
