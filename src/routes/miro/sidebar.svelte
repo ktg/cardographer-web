@@ -1,14 +1,12 @@
 <script lang="ts">
+	import type {IWidget, Miro} from "$lib/miro"
 	import {onMount} from "svelte";
-	import type {Miro, IWidget} from "$lib/miro"
 
 	declare const miro: Miro
 
 	let widgets: IWidget[] = []
 	let warning: string = null
 	let allowUpload = false
-
-	console.log("blah 1")
 
 	onMount(async () => {
 		miro.onReady(() => {
@@ -18,12 +16,10 @@
 	})
 
 	async function updateWidgets() {
-		console.log("Updating")
 		try {
 			const allWidgets = await miro.board.widgets.get()
-			console.log(allWidgets)
 			const images = allWidgets.filter((widget) => widget.type === "IMAGE").length
-			if(images === 0) {
+			if (images === 0) {
 				warning = "No cards found on board"
 				widgets = []
 				allowUpload = false
@@ -57,8 +53,8 @@
 		const filtered = widgets.filter((widget) => widget.type !== "IMAGE" || widget.url || widget.title)
 
 		const url = URL.createObjectURL(new Blob(
-			[ JSON.stringify(filtered) ],
-			{ type: 'application/json' }
+			[JSON.stringify(filtered)],
+			{type: 'application/json'}
 		));
 
 		const a = document.createElement('a')
@@ -99,12 +95,12 @@
 </script>
 
 <style>
-	.warn {
-        @apply bg-yellow-200 p-2 m-2 font-bold rounded-xl;
+    .warn {
+        @apply bg-yellow-100 py-2 px-4 my-2 mx-4 font-bold rounded-xl;
     }
 
     button {
-        @apply my-2 mx-8 rounded-xl py-2 px-8 bg-blue-600 text-white font-bold disabled:opacity-25 disabled:cursor-default;
+        @apply my-2 mx-8 rounded-xl py-2 px-8 bg-blue-600 text-white font-bold transition-opacity duration-300 hover:opacity-75 disabled:opacity-25 disabled:cursor-default;
     }
 </style>
 
