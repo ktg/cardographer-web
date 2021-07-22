@@ -1,0 +1,113 @@
+<script lang="ts">
+	import LibLoader from "$lib/LibLoader.svelte";
+
+	let widgets: SDK.IWidget[] = []
+	let warning: string = null
+
+	async function loaded() {
+		miro.onReady(() => {
+			miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
+			updateWidgets()
+		})
+	}
+
+	async function updateWidgets() {
+		try {
+			const allWidgets = await miro.board.widgets.get()
+			widgets = allWidgets.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
+		} catch (e) {
+			document.getElementById('upload').style.display = 'none'
+			warning = e.message
+		}
+	}
+
+	async function selectWidget(widget: SDK.IWidget) {
+		await miro.board.selection.selectWidgets(widget.id)
+		const width = widget.bounds.right - widget.bounds.left
+		const height = widget.bounds.bottom - widget.bounds.top
+		const rect = {
+			x: widget.bounds.left - (width / 2),
+			y: widget.bounds.top - (height / 2),
+			width: width * 2,
+			height: height * 2
+		}
+		await miro.board.viewport.set(rect)
+	}
+
+	async function download() {
+		const widgets = await miro.board.widgets.get()
+		const filtered = widgets.filter((widget) => widget.type !== "IMAGE" || widget.url || widget.title)
+
+		const url = URL.createObjectURL(new Blob(
+			[ JSON.stringify(filtered) ],
+			{ type: 'application/json' }
+		));
+
+		const a = document.createElement('a')
+		a.href = url
+		a.download = 'miro.json'
+		a.click()
+		setTimeout(() => {
+			URL.revokeObjectURL(url);
+		}, 150)
+	}
+
+	async function upload() {
+		try {
+			document.getElementById('upload').style.display = 'none'
+			const widgets = await miro.board.widgets.get()
+			const filtered = widgets.filter((widget) => widget.type !== "IMAGE" || widget.url || widget.title)
+
+			const board = await miro.board.info.get()
+			board.widgets = filtered
+
+			const json = JSON.stringify(board)
+
+			const response = await fetch('https://cardographer.cs.nott.ac.uk/api/dump', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: json
+			});
+
+			if (response.ok) {
+				warning = "Successfully Uploaded"
+			} else {
+				warning = response.statusText
+			}
+		} catch (e) {
+			warning = e.message
+		}
+	}
+</script>
+
+<style>
+	.warn {
+        @apply bg-yellow-200 p-2 m-2 font-bold rounded-xl;
+    }
+
+    button {
+        @apply my-2 mx-8 rounded-xl py-2 px-8 bg-blue-600 text-white font-bold disabled:opacity-25 disabled:cursor-default;
+    }
+</style>
+
+<LibLoader url="https://miro.com/app/static/sdk.1.1.js" on:loaded={loaded}/>
+<div class="flex flex-col" style="font: 14px OpenSans, Arial, Helvetica, sans-serif;">
+	<h1 class="text-2xl font-extrabold items-center p-4">Cardographer Data</h1>
+	<button on:click={upload} disabled={widgets.length === 0}>Upload</button>
+	<button on:click={download} disabled={widgets.length === 0}>Download</button>
+
+	{#if warning}
+		<div class="warn">{warning}</div>
+	{/if}
+	{#if widgets.length !== 0}
+		<div class="warn">{widgets.length} images will not be uploaded. Give them titles to include them in
+			the
+			upload
+		</div>
+	{/if}
+	{#each widgets as widget (widget.id)}
+		<div on:click={() => selectWidget(widget)}
+		     class="py-2 px-8 cursor-pointer transition-opacity duration-300 hover:opacity-50">
+			Image {widget.id}</div>
+	{/each}
+</div>
