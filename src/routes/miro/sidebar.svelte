@@ -1,19 +1,20 @@
 <script lang="ts">
-	import LibLoader from "$lib/LibLoader.svelte";
+	import {onMount} from "svelte";
+	import {miroReady} from "$lib/miro"
+	import type {Miro, IWidget} from "$lib/miro"
 
-	let widgets: SDK.IWidget[] = []
+	let miro: Miro = null
+	let widgets: IWidget[] = []
 	let warning: string = null
 	let allowUpload = false
 
 	console.log("blah 1")
-	async function loaded() {
-		console.log("blah 2")
-		miro.onReady(() => {
-			console.log("blah 3")
-			miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
-			updateWidgets()
-		})
-	}
+
+	onMount(async () => {
+		miro = await miroReady()
+		miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
+		updateWidgets()
+	})
 
 	async function updateWidgets() {
 		console.log("Updating")
@@ -37,7 +38,7 @@
 		}
 	}
 
-	async function selectWidget(widget: SDK.IWidget) {
+	async function selectWidget(widget: IWidget) {
 		await miro.board.selection.selectWidgets(widget.id)
 		const width = widget.bounds.right - widget.bounds.left
 		const height = widget.bounds.bottom - widget.bounds.top
@@ -106,7 +107,6 @@
     }
 </style>
 
-<LibLoader url="https://miro.com/app/static/sdk.1.1.js" on:loaded={loaded}/>
 <div class="flex flex-col" style="font: 14px OpenSans, Arial, Helvetica, sans-serif;">
 	<h1 class="text-2xl font-extrabold items-center p-4">Cardographer Data</h1>
 	<button on:click={upload} disabled={!allowUpload}>Upload</button>
