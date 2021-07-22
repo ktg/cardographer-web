@@ -1,8 +1,10 @@
 export async function miroReady(): Promise<Miro> {
 	return new Promise(function (resolve) {
 		while(!window.miro) {
+			console.log(window.miro)
 			delay(250)
 		}
+		console.log(window.miro)
 		window.miro.onReady(() => {
 			resolve(window.miro)
 		})
