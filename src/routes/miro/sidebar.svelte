@@ -13,8 +13,10 @@
 	}
 
 	async function updateWidgets() {
+		console.log("Updating")
 		try {
 			const allWidgets = await miro.board.widgets.get()
+			console.log(allWidgets)
 			const images = allWidgets.filter((widget) => widget.type === "IMAGE").length
 			if(images === 0) {
 				warning = "No cards found on board"
@@ -28,6 +30,7 @@
 		} catch (e) {
 			document.getElementById('upload').style.display = 'none'
 			warning = e.message
+			console.warn(e)
 		}
 	}
 
