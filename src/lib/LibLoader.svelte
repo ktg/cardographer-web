@@ -26,6 +26,6 @@
 	}
 </script>
 
-<svelte:head>
+<div>
 	<script bind:this={script} src={url} on:load={loaded}/>
-</svelte:head>
+</div>
