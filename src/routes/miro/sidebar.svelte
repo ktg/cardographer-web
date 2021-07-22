@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {onMount} from "svelte";
-	import {miroReady} from "$lib/miro"
 	import type {Miro, IWidget} from "$lib/miro"
 
-	let miro: Miro = null
+	declare const miro: Miro
+
 	let widgets: IWidget[] = []
 	let warning: string = null
 	let allowUpload = false
@@ -11,9 +11,10 @@
 	console.log("blah 1")
 
 	onMount(async () => {
-		miro = await miroReady()
-		miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
-		updateWidgets()
+		miro.onReady(() => {
+			miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
+			updateWidgets()
+		})
 	})
 
 	async function updateWidgets() {
