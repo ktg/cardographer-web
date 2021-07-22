@@ -6,16 +6,10 @@
 	let allowUpload = false
 
 	console.log("blah 1")
-	miro.onReady(() => {
-		console.log("blah 2")
-		miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
-		updateWidgets()
-	})
-
 	async function loaded() {
-		console.log("blah 3")
+		console.log("blah 2")
 		miro.onReady(() => {
-			console.log("blah 4")
+			console.log("blah 3")
 			miro.addListener(miro.enums.event.SELECTION_UPDATED, updateWidgets)
 			updateWidgets()
 		})
