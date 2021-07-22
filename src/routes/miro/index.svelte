@@ -17,7 +17,7 @@
 						title: 'Cardographer Upload',
 						svgIcon: icon,
 						onClick: async () => {
-							await miro.board.ui.openLeftSidebar('/miro/sidebar.html')
+							await miro.board.ui.openLeftSidebar('/miro/sidebar')
 						},
 					},
 				},
