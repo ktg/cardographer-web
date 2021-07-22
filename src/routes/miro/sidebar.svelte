@@ -3,6 +3,7 @@
 
 	let widgets: SDK.IWidget[] = []
 	let warning: string = null
+	let allowUpload = false
 
 	async function loaded() {
 		miro.onReady(() => {
@@ -14,7 +15,16 @@
 	async function updateWidgets() {
 		try {
 			const allWidgets = await miro.board.widgets.get()
-			widgets = allWidgets.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
+			const images = allWidgets.filter((widget) => widget.type === "IMAGE").length
+			if(images === 0) {
+				warning = "No cards found on board"
+				widgets = []
+				allowUpload = false
+			} else {
+				widgets = allWidgets.filter((widget) => widget.type === "IMAGE" && widget.url === '' && widget.title === '')
+				warning = ""
+				allowUpload = true
+			}
 		} catch (e) {
 			document.getElementById('upload').style.display = 'none'
 			warning = e.message
@@ -93,8 +103,8 @@
 <LibLoader url="https://miro.com/app/static/sdk.1.1.js" on:loaded={loaded}/>
 <div class="flex flex-col" style="font: 14px OpenSans, Arial, Helvetica, sans-serif;">
 	<h1 class="text-2xl font-extrabold items-center p-4">Cardographer Data</h1>
-	<button on:click={upload} disabled={widgets.length === 0}>Upload</button>
-	<button on:click={download} disabled={widgets.length === 0}>Download</button>
+	<button on:click={upload} disabled={!allowUpload}>Upload</button>
+	<button on:click={download} disabled={!allowUpload}>Download</button>
 
 	{#if warning}
 		<div class="warn">{warning}</div>
