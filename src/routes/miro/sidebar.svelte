@@ -29,7 +29,7 @@
 				allowUpload = true
 			}
 		} catch (e) {
-			document.getElementById('upload').style.display = 'none'
+			allowUpload = false
 			warning = e.message
 			console.warn(e)
 		}
@@ -49,11 +49,9 @@
 	}
 
 	async function download() {
-		const widgets = await miro.board.widgets.get()
-		const filtered = widgets.filter((widget) => widget.type !== "IMAGE" || widget.url || widget.title)
-
+		const board = await getBoard()
 		const url = URL.createObjectURL(new Blob(
-			[JSON.stringify(filtered)],
+			[JSON.stringify(board)],
 			{type: 'application/json'}
 		));
 
@@ -66,15 +64,19 @@
 		}, 150)
 	}
 
+	async function getBoard() {
+		const widgets = await miro.board.widgets.get()
+		const filtered = widgets.filter((widget) => widget.type !== "IMAGE" || widget.url || widget.title)
+
+		const board = await miro.board.info.get()
+		board.widgets = filtered
+		return board
+	}
+
 	async function upload() {
 		try {
 			document.getElementById('upload').style.display = 'none'
-			const widgets = await miro.board.widgets.get()
-			const filtered = widgets.filter((widget) => widget.type !== "IMAGE" || widget.url || widget.title)
-
-			const board = await miro.board.info.get()
-			board.widgets = filtered
-
+			const board = await getBoard()
 			const json = JSON.stringify(board)
 
 			const response = await fetch('https://cardographer.cs.nott.ac.uk/api/dump', {
