@@ -13,7 +13,7 @@ export async function post(req: Request): Promise<EndpointOutput> {
 		await collection.insertMany(dataSet.data)
 		delete dataSet.data;
 		const result = await collection.insertOne(dataSet)
-		return {body: {"result": "success", "insertedId": result.insertedId}}
+		return {body: {"result": "success", "insertedId": result.insertedId.toHexString()}}
 	} else {
 		return {status: 400, body: "Missing Parameters"}
 	}

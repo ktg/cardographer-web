@@ -1,7 +1,5 @@
 import type {Db} from 'mongodb'
-import mongodb from "mongodb"
-// commonjs workaround? (build for node complains)
-const {MongoClient} = mongodb
+import {MongoClient} from "mongodb"
 
 const {MONGODB} = process.env
 
@@ -14,7 +12,7 @@ let db: Promise<Db> = new Promise<Db>((resolve, reject) => {
 })
 
 function attemptConnection(resolve: (value: Db) => void, reject): void {
-	MongoClient.connect(url, {useUnifiedTopology: true})
+	MongoClient.connect(url)
 		.then((client) => {
 			console.log("Connected to DB")
 			resolve(client.db(dbname))

@@ -1,4 +1,4 @@
-POST http://localhost/api/xSpace
+POST http://localhost:3000/api/xSpace
 Content-Type: application/json
 
 [
@@ -63,7 +63,7 @@ Content-Type: application/json
 ###
 # Local Drink Upload
 
-POST http://localhost/api/drink
+POST http://localhost:3000/api/drink
 Content-Type: application/json
 
 {

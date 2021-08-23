@@ -14,7 +14,7 @@ export async function get(): Promise<EndpointOutput> {
 	let lines = []
 	let dataAccel: Array<Point> = []
 	let dataAccelDrink: Array<Point> = []
-	let prev = {device: '', tag: null}
+	let prev: any = {device: '', tag: null}
 
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
