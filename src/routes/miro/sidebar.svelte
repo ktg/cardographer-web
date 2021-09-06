@@ -50,6 +50,7 @@
 
 	async function download() {
 		const board = await getBoard()
+		board['_id'] = "download:" + board.id + ":" + Date.now()
 		const url = URL.createObjectURL(new Blob(
 			[JSON.stringify(board)],
 			{type: 'application/json'}
