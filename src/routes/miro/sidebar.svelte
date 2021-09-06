@@ -58,7 +58,7 @@
 
 		const a = document.createElement('a')
 		a.href = url
-		a.download = 'miro.json'
+		a.download = 'Miro ' + board.title + ' ' + new Date().toISOString() + ' .json'
 		a.click()
 		setTimeout(() => {
 			URL.revokeObjectURL(url);
