@@ -75,7 +75,7 @@
 
 	async function upload() {
 		try {
-			document.getElementById('upload').style.display = 'none'
+			allowUpload = false
 			const board = await getBoard()
 			const json = JSON.stringify(board)
 
@@ -85,6 +85,7 @@
 				body: json
 			});
 
+			await updateWidgets()
 			if (response.ok) {
 				warning = "Successfully Uploaded"
 			} else {
