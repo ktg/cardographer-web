@@ -9,7 +9,12 @@ export async function post(req: Request): Promise<EndpointOutput> {
 			item.device = device;
 		});
 		const db = await getDb()
-		const collection = await db.collection('drink')
+		let collectionName = 'drink'
+		const channel = req.query['channel'] as string
+		if(channel) {
+			collectionName = 'drink-' + channel
+		}
+		const collection = await db.collection(collectionName)
 		await collection.insertMany(dataSet.data)
 		delete dataSet.data;
 		const result = await collection.insertOne(dataSet)

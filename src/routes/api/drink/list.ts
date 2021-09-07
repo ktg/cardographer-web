@@ -1,9 +1,14 @@
 import {getDb} from "$lib/db";
-import type {EndpointOutput} from "@sveltejs/kit";
+import type {Request, EndpointOutput} from "@sveltejs/kit";
 
-export async function get(): Promise<EndpointOutput> {
+export async function get(req: Request): Promise<EndpointOutput> {
 	const db = await getDb()
-	const result = await db.collection('drink').find().toArray();
+	let collectionName = 'drink'
+	const channel = req.query['channel'] as string
+	if(channel) {
+		collectionName = 'drink-' + channel
+	}
+	const result = await db.collection(collectionName).find().toArray();
 	result.forEach((item) => {
 		delete item._id;
 	})
