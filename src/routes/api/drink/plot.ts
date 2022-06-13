@@ -1,5 +1,5 @@
 import {getDb} from "$lib/db"
-import type {EndpointOutput} from "@sveltejs/kit"
+import type {RequestHandler} from "@sveltejs/kit"
 import simplify from "simplify-js"
 
 interface Point {
@@ -7,7 +7,7 @@ interface Point {
 	y: number
 }
 
-export async function get(): Promise<EndpointOutput> {
+export const get: RequestHandler = async function ({}) {
 	const db = await getDb()
 	const result = await db.collection('drink').find().sort({"device": 1, "time": 1}).toArray()
 
@@ -16,6 +16,7 @@ export async function get(): Promise<EndpointOutput> {
 	let dataAccelDrink: Array<Point> = []
 	let prev: any = {device: '', tag: null}
 
+	// @ts-ignore
 	result.push({x: 0, device: "end"})
 	result.forEach((item) => {
 		if ('x' in item) {

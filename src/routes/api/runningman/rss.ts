@@ -1,4 +1,4 @@
-import type {EndpointOutput} from "@sveltejs/kit";
+import type {RequestHandler} from "@sveltejs/kit";
 import AbortController from "abort-controller"
 import {createDocument} from 'domino'
 import type {Response as FetchResponse} from 'node-fetch'
@@ -26,7 +26,7 @@ async function fetchTimeout(url: string, time: number): Promise<FetchResponse> {
 	}
 }
 
-export async function get(): Promise<EndpointOutput> {
+export const get: RequestHandler = async function ({}) {
 	const response = await fetchTimeout('https://www.myrunningman.com/episodes/newest', 10000);
 	if (response.ok) {
 		const html = await response.text()
@@ -37,6 +37,7 @@ export async function get(): Promise<EndpointOutput> {
 		let body = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>MyRunningMan Most Recent Episodes</title>'
 		linkList.forEach((link) => {
 			if (link.href.startsWith('magnet:')) {
+				// noinspection HtmlExtraClosingTag
 				body += '<item><title>'
 					+ escapeHTML(previousLink.textContent)
 					+ '</title><link>'

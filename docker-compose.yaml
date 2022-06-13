@@ -43,5 +43,7 @@ services:
             - "3000:3000"
             - "24678:24678"
         volumes:
+            - ./src:/dev/src/:consistent
+            - ./static:/dev/static/:ro
             - src:/app/src
             - static:/app/static

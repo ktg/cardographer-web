@@ -1,8 +1,8 @@
 import {getDb} from "$lib/db";
-import type {EndpointOutput, Request} from "@sveltejs/kit";
+import type {RequestHandler} from "@sveltejs/kit";
 
-export async function post(req: Request): Promise<EndpointOutput> {
-	const dataSet = req.body as any
+export const post: RequestHandler = async function ({url, request}) {
+	const dataSet = await request.json()
 	if (Array.isArray(dataSet.data) && typeof dataSet.device === 'string') {
 		const device = dataSet.device.slice(-5);
 		dataSet.data.forEach((item) => {
@@ -10,8 +10,8 @@ export async function post(req: Request): Promise<EndpointOutput> {
 		});
 		const db = await getDb()
 		let collectionName = 'drink'
-		const channel = req.query['channel'] as string
-		if(channel) {
+		const channel = url.searchParams.get('channel')
+		if (channel) {
 			collectionName = 'drink-' + channel
 		}
 		const collection = await db.collection(collectionName)

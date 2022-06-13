@@ -1,11 +1,11 @@
 import {getDb} from "$lib/db";
-import type {Request, EndpointOutput} from "@sveltejs/kit";
+import type {RequestHandler} from "@sveltejs/kit";
 
-export async function get(req: Request): Promise<EndpointOutput> {
+export const get: RequestHandler = async function ({url}) {
 	const db = await getDb()
 	let collectionName = 'drink'
-	const channel = req.query['channel'] as string
-	if(channel) {
+	const channel = url.searchParams.get('channel')
+	if (channel) {
 		collectionName = 'drink-' + channel
 	}
 	const result = await db.collection(collectionName).find().toArray();

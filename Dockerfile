@@ -1,13 +1,13 @@
 FROM node:alpine
 RUN mkdir /app
-RUN mkdir /app/src
 WORKDIR /app
 COPY *.json /app/
-RUN npm install
-COPY *.config.js *.config.cjs /app/
-COPY ./static /app/static
-COPY ./src /app/src
+RUN npm ci && npm cache clean --force
+COPY *.config.js *.config.cjs .npmrc /app/
+COPY static /app/static
+COPY src /app/src
 ENV NODE_ENV=production
 RUN npm run build
+EXPOSE 3000
 
-CMD npm start
+CMD ["node", "build"]

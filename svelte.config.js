@@ -1,20 +1,30 @@
-import sveltePreprocess from 'svelte-preprocess'
-import nodeAdapter from '@sveltejs/adapter-node'
+import preprocess from 'svelte-preprocess';
+import adapter from '@sveltejs/adapter-node';
 
 /** @type {import('@sveltejs/kit').Config} */
-export default {
+const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
-	preprocess: [
-		sveltePreprocess({
-			postcss: true
-		}),
-	],
+	preprocess: preprocess({
+		postcss: true,
+	}),
 
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte',
-		paths: {},
-		adapter: nodeAdapter({})
+		//target: '#svelte',
+		paths: {
+			assets: ''
+		},
+		adapter: adapter({
+			// default options are shown
+			out: 'build'
+		}),
+		vite: {
+			optimizeDeps: {
+				include: []
+			}
+		}
 	}
 };
+
+export default config;
