@@ -13,7 +13,7 @@
 		"abort-controller": "^3.0.0",
 		"domino": "^2.1.6",
 		"mongodb": "^4.7.0",
-		"node-fetch": "^3.2.6",
+		"node-fetch": "^3.2.10",
 		"simplify-js": "^1.2.4"
 	},
 	"devDependencies": {
